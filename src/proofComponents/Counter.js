@@ -8,10 +8,12 @@ const Container = styled.div`
     height: 40px;
     border-radius: 10px;
 
-    margin: ${props => props.goal?'50px':'10px'} 0 10px 0;
+    margin: ${props => props.goal?'80px':'10px'} 0 10px 0;
     font-weight: 700;
 
     background: #aaa;
+
+    color: ${props => props.dark ? '#222' : '#555'};
 
     display: flex;
     justify-content: center;
@@ -19,10 +21,9 @@ const Container = styled.div`
 `
 
 const Counter = props => {
-    console.log(props.goal)
     return (
-        <Container goal={props.goal}>
-           {props.order}
+        <Container goal={props.goal} dark={props.firstGoalPosition > props.order - 1}>
+           {props.firstGoalPosition > props.order - 1 ? props.order : '?'}
         </Container>
     );
 }

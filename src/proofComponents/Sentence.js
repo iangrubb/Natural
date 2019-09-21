@@ -8,7 +8,7 @@ const Container = styled.div`
     height: 40px;
     border-radius: 10px;
 
-    margin: ${props => props.goal?'50px':'10px'} 40px 10px 10px;
+    margin: ${props => props.goal?'80px':'10px'} 40px 10px 10px;
     padding: 0 10px;
 
     background: #aaa;

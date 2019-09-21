@@ -4,6 +4,7 @@ import './App.css'
 import styled from 'styled-components'
 
 import ShowProof from './views/ShowProof'
+import NavBar from './views/NavBar'
 
 const Site = styled.div`
   width: 100vw;
@@ -11,6 +12,7 @@ const Site = styled.div`
   background: #ddd;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `
@@ -18,6 +20,7 @@ const Site = styled.div`
 function App() {
   return (
     <Site>
+      < NavBar />
       < ShowProof />
     </Site>
   )

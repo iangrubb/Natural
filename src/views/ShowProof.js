@@ -7,12 +7,16 @@ import Sentence from '../proofComponents/Sentence'
 import Justification from '../proofComponents/Justification'
 import Counter from '../proofComponents/Counter'
 
+import Goal from '../proofHelpers/Goal'
+import Message from '../proofHelpers/Message'
+import Navigation from '../proofHelpers/Navigation'
+import PromptContainer from '../proofHelpers/PromptContainer'
+
 
 
 const Page = styled.div`
     width: calc(100% - 20px);
-    height: calc(100% - 20px);
-    background: #eee;
+    height: calc(100% - 60px);
 
     display: flex;
     justify-content: space-evenly;
@@ -35,16 +39,20 @@ const Interactions = styled.div`
     height: 90%;
     width: 30%;
 
-    background: #aaa;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 `
 
 const Column = styled.div`
     min-width: ${props=>props.width}px;
-    height: 100%;
 
     background: #ccc;
 
     overflow: scroll;
+
+    padding: 10px 0 0 0;
 
     display: flex;
     flex-direction: column;
@@ -56,7 +64,7 @@ const ShowProof = props => {
         <Page>
             <Proof>
                 <Column width={80} align={"center"}>
-                    {props.lines.map( (id, idx) => <Counter key={id} id={id} order={idx + 1}/>)}
+                    {props.lines.map( (id, idx) => <Counter key={id} id={id} order={idx + 1} firstGoalPosition={props.firstGoalPosition}/>)}
                 </Column>
                 <Column width={200} align={"flex-start"}>
                     <ProofR key={props.initialProofId} id={props.initialProofId} />
@@ -66,8 +74,10 @@ const ShowProof = props => {
                 </Column>
             </Proof>
             <Interactions>
-
-
+                <Goal />
+                <Navigation/>
+                <PromptContainer/>
+                <Message />
             </Interactions>
         </Page>
     );
@@ -84,8 +94,10 @@ const msp = () => {
 
         const lines = extract(initialProof.children)
 
+        const firstGoal = lines.find( l => !state.sentences.find( s => s.id === l).justificationId )
 
-        return {...state, lines: lines.flat(Infinity), initialProof: initialProof}
+
+        return {...state, lines: lines.flat(Infinity), initialProof: initialProof, firstGoalPosition: lines.findIndex(l=>l===firstGoal)}
     }
 }
 

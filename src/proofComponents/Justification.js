@@ -7,10 +7,10 @@ const Container = styled.div`
     height: 40px;
     border-radius: 10px;
 
-    margin: ${props => props.goal?'50px':'10px'} 0 10px 0;
+    margin: ${props => props.goal?'80px':'10px'} 0 10px 0;
     padding: 0 10px;
 
-    background: #aaa;
+    background: ${props => props.currentGoal ? '#555' : '#aaa'};
 
     font-weight: 700;
 
@@ -20,9 +20,9 @@ const Container = styled.div`
 `
 
 const Justification = props => {
-
+    console.log(props)
     return (
-        <Container goal={props.goal}>
+        <Container goal={props.goal} currentGoal={props.currentGoal}>
             {props.justification ? props.justification.type : "Goal"}
         </Container>
     );
@@ -35,7 +35,7 @@ const msp = () => {
         const just = state.justifications.find( j => j.id === sent.justificationId )
 
 
-        return {...state, justification: just, goal: !sent.justificationId}
+        return {...state, justification: just, goal: !sent.justificationId, currentGoal: state.currentGoal === ownProps.id }
     }
 }
 

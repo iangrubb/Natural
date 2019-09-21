@@ -12,17 +12,19 @@ const Container = styled.div`
 `
 
 const Premises = styled.div`
-    
+    display: flex;
+    flex-direction: column;
 `
 
 const Else = styled.div`
-    margin: -4px 0 0 0;
-    border-top: solid black 4px;
+    box-shadow: -4px -4px 0 black;
+
+    display: flex;
+    flex-direction: column;
 `
 
 
 const Proof = props => {
-    console.log(props)
     return (
         <Container depth={0}>
             <Premises>
@@ -42,7 +44,6 @@ const msp = () => {
         const firstAfterLine = children.find( c => {
             if (c % 2 === 0) {
                 const line = state.sentences.find(s=> s.id === c)
-                console.log("line",line)
                 const just = state.justifications.find(j=> j.id === line.justificationId)
                 return just ? just.type !== "Premise" : true
             } else {
