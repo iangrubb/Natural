@@ -19,17 +19,19 @@ const Page = styled.div`
     height: calc(100% - 60px);
 
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 `
 
 const Proof = styled.div`
     height: 90%;
-    width: 60%
 
     overflow: scroll;
 
-    background: #aaa;
+    background: #ccc;
+
+    border-radius: 4px;
+    box-shadow: 2px 2px 4px #999;
 
     display: flex;
     justify-content: center;
@@ -38,6 +40,7 @@ const Proof = styled.div`
 const Interactions = styled.div`
     height: 90%;
     width: 30%;
+    max-width: 300px;
 
     display: flex;
     flex-direction: column;
@@ -75,9 +78,9 @@ const ShowProof = props => {
             </Proof>
             <Interactions>
                 <Goal />
-                <Navigation/>
                 <PromptContainer/>
                 <Message />
+                <Navigation/>
             </Interactions>
         </Page>
     );

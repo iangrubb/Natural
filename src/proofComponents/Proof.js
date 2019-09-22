@@ -8,7 +8,8 @@ const Container = styled.div`
 
     margin: 0 0 0 ${props=> props.depth * 20}px;
     border-left: solid black 4px;
-
+    width: 90%;
+    
 `
 
 const Premises = styled.div`

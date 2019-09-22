@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import Button from '../userInterface/Button'
 
+import display from '../helpers/display'
+
 const Container = styled.div`
     width: 90%;
     height: 16%;

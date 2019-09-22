@@ -6,12 +6,11 @@ import styled from 'styled-components'
 const Container = styled.div`
     width: 40px;
     height: 40px;
-    border-radius: 10px;
 
     margin: ${props => props.goal?'80px':'10px'} 0 10px 0;
     font-weight: 700;
+    font-size: 1.4em;
 
-    background: #aaa;
 
     color: ${props => props.dark ? '#222' : '#555'};
 

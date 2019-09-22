@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Container = styled.div`
     width: 90%;
-    height: 48%;
+    height: 42%;
 
     background: #ccc;
 

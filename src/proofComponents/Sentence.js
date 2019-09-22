@@ -3,9 +3,12 @@ import { connect } from 'react-redux'
 
 import styled from 'styled-components'
 
+import display from '../helpers/display'
+
 
 const Container = styled.div`
     height: 40px;
+    width: fit-content;
     border-radius: 10px;
 
     margin: ${props => props.goal?'80px':'10px'} 40px 10px 10px;
@@ -17,90 +20,6 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
 `
-
-const Part = styled.div`
-    display: flex;
-    align-items: center;
-`
-
-
-
-
-const display = (content, main) => {
-
-    switch(content.type){
-        case "atom":
-            return <Part>{content.letter}</Part>
-        case "negation":
-            return <Part>¬{display(content.left, false)}</Part>
-        case "conjunction":
-            return (
-                <Part>
-                    {main ? null : '('}
-                    {display(content.left, false)}
-                    {' & '}
-                    {display(content.right, false)}
-                    {main ? null : ')'}
-                </Part>
-                )
-        case "disjunction":
-            return (
-                <Part>
-                    {main ? null : '('}
-                    {display(content.left, false)}
-                    {' ∨ '}
-                    {display(content.right, false)}
-                    {main ? null : ')'}
-                </Part>
-                )
-        case "conditional":
-            return (
-                <Part>
-                    {main ? null : '('}
-                    {display(content.left, false)}
-                    {' → '}
-                    {display(content.right, false)}
-                    {main ? null : ')'}
-                </Part>
-                )
-        // case "disjunction":
-        //     return (
-        //         <Container >
-
-        //         {props.main ? null : ')'}
-
-        //         <Sentence sentence={props.sentence.left} main={false}/>
-
-        //         ∨
-
-        //         <Sentence sentence={props.sentence.right} main={false}/>
-
-        //         {props.main ? null : ')'}
-
-        //         </Container>
-        //     )
-        // case "conditional":
-        //     return (
-        //         <Container >
-
-        //         {props.main ? null : '('}
-
-        //         <Sentence sentence={props.sentence.left} main={false}/>
-
-        //         →
-
-        //         <Sentence sentence={props.sentence.right} main={false}/>
-
-        //         {props.main ? null : ')'}
-
-        //         </Container>
-        //     )
-        
-    }
-
-}
-
-
 
 
 const Sentence = props => {

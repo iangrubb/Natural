@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components'
 
+import Instructions from '../prompts/Instructions'
+
 const Container = styled.div`
     width: 90%;
     height: 20%;
@@ -21,7 +23,8 @@ const Container = styled.div`
 const PromptContainer = () => {
     return (
         <Container>
-            
+            <h3 style={{margin:'4px'}}>Next Step</h3>
+            <Instructions text="choose a highlighted sentence"/>
             
         </Container>
     );
