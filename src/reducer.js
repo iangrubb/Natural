@@ -49,14 +49,59 @@ import { combineReducers } from 'redux'
 
 // OR ELIM Test Data
 
+// const defaultState = {
+//     initialProofId: 1,
+//     proofs: [
+//         {id: 1, children: [2, 4]}
+//     ],
+//     sentences: [
+//         {id: 2, content: {type:"disjunction", left: {type:"conjunction", left:{type:"atom", letter:"A"}, right:{type:"atom", letter:"B"}}, right: {type:"conjunction", left:{type:"atom", letter:"C"}, right:{type:"atom", letter:"D"}}} , justificationId: 1},
+//         {id: 4, content: {type:"disjunction", left: {type:"atom", letter:"A"} , right: {type:"atom", letter:"D"}}},
+//     ],
+//     justifications: [
+//         {id: 1, type:"Premise", citationIds:[]},
+//     ],
+//     currentGoal: 4,
+//     currentFocus: null,
+//     proofCounter: 1,
+//     sentenceCounter: 4,
+//     justificationCounter: 1
+// }
+
+
+
+
+// Negation without DNE data
+
+// const defaultState = {
+//     initialProofId: 1,
+//     proofs: [
+//         {id: 1, children: [2, 4]}
+//     ],
+//     sentences: [
+//         {id: 2, content: {type:"disjunction", left: {type:"atom", letter:"A"} , right: {type:"atom", letter:"B"}}, justificationId: 1},
+//         {id: 4, content: {type:"conditional", left: {type:"negation", right: {type:"atom", letter:"A"}} , right: {type:"atom", letter:"B"}}}
+//     ],
+//     justifications: [
+//         {id: 1, type:"Premise", citationIds:[]},
+//     ],
+//     currentGoal: 4,
+//     currentFocus: null,
+//     proofCounter: 1,
+//     sentenceCounter: 4,
+//     justificationCounter: 1
+// }
+
+// not (a or b) to not a and not b
+
 const defaultState = {
     initialProofId: 1,
     proofs: [
         {id: 1, children: [2, 4]}
     ],
     sentences: [
-        {id: 2, content: {type:"disjunction", left: {type:"conjunction", left:{type:"atom", letter:"A"}, right:{type:"atom", letter:"B"}}, right: {type:"conjunction", left:{type:"atom", letter:"C"}, right:{type:"atom", letter:"D"}}} , justificationId: 1},
-        {id: 4, content: {type:"disjunction", left: {type:"atom", letter:"A"} , right: {type:"atom", letter:"D"}}},
+        {id: 2, content: {type:"negation", right: {type:"disjunction", left: {type:"atom", letter:"A"} , right: {type:"atom", letter:"B"}}}, justificationId: 1},
+        {id: 4, content: {type:"conjunction", left: {type:"negation", right: {type:"atom", letter:"A"}} , right: {type:"negation", right: {type:"atom", letter:"B"}}}}
     ],
     justifications: [
         {id: 1, type:"Premise", citationIds:[]},

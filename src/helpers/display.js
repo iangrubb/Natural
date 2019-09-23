@@ -15,7 +15,7 @@ const display = (content, main) => {
         case "contradiction":
             return <Part>⊥</Part>
         case "negation":
-            return <Part>¬{display(content.left, false)}</Part>
+            return <Part>¬{display(content.right, false)}</Part>
         case "conjunction":
             return (
                 <Part>

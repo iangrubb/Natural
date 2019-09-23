@@ -80,6 +80,24 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                                 ()=>{dispatch({type: "UNSET FOCUS"})}
                         ]}/>
                     )
+                case "negation":
+                    return (
+                        <Options
+                            instructions={"Proving a negation requires proving a contradiction after assuming its opposite."}
+                            prompts={["ok"]}
+                            actions={[
+                                ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
+                        ]}/>
+                    )
+                case "contradiction":
+                    return (
+                        <Options
+                            instructions={"Derive this by proving some sentence and its negation."}
+                            prompts={["ok"]}
+                            actions={[
+                                ()=>{dispatch({type: "UNSET FOCUS"})}
+                        ]}/>
+                    ) 
             }
 
         } else {
@@ -128,6 +146,42 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                                 ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
                         ]}/>
                     )
+                case "negation":
+                    const unnegated = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.right) && findAbove(goalSentence.id, s.id, state.proofs))
+
+                    if (unnegated) {
+                        return (
+                            <Options
+                            instructions={"You've already proved contadictory sentences, so you can derive a contradiction."}
+                            prompts={["ok"]}
+                            actions={[
+                                ()=>{fill(state, goalSentence, focusSentence, {unnegated: unnegated}, dispatch)}
+                        ]}/>
+                        )
+                    } else {
+                        return (
+                            <Options
+                            instructions={"In order to derive a contradiction, you must prove the non-negated sentence."}
+                            prompts={["ok"]}
+                            actions={[
+                                ()=>{fill(state, goalSentence, focusSentence, {unnegated: unnegated}, dispatch)}
+                        ]}/>
+                        )
+                    }
+                case "contradiction":
+                    return (
+                        <Options
+                        instructions={"Anything follows from a contradiction, including your goal."}
+                        prompts={["ok"]}
+                        actions={[
+                            ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
+                    ]}/>
+                    )
+
+
+
+
+
             }
         }
     }

@@ -99,6 +99,11 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                 newJustification(goalSentence.id, "→i", [goalIds.main], dispatch)
                 dispatch({type: "SET GOAL", newId: goalIds.sub})
                 break
+            case "negation":
+                const Ids = newProof(focusSentence.content.right, {type: "contradiction"}, goalSentence.id, parentId, dispatch)
+                newJustification(goalSentence.id, "¬i", [Ids.main], dispatch)
+                dispatch({type: "SET GOAL", newId: Ids.sub})
+                break
         }
 
     // Elim Rules
@@ -144,6 +149,35 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
 
                 dispatch({type: "SET GOAL", newId: leftIds.sub})
                 break
+
+            case "negation":
+
+                const unnegatedContent = focusSentence.content.right
+
+                let unnegatedId
+                
+                if (options.unnegated) {
+                    unnegatedId = options.unnegated.id
+                } else {
+                    unnegatedId = newSentence(focusSentence.content.right, goalSentence.id, parentId, dispatch)
+                    dispatch({type: "SET GOAL", newId: unnegatedId})
+                }
+
+                if (sentenceEquality({type: "contradiction"}, goalSentence.content)) {
+                    newJustification(goalSentence.id, "⊥e", [unnegatedId, focusSentence.id], dispatch)
+                    dispatch({type: "UNSET GOAL"})
+                } else {
+                    const conId = newSentence({type: "contradiction"}, goalSentence.id, parentId, dispatch)
+                    newJustification(conId, "⊥e", [unnegatedId, focusSentence.id], dispatch)
+                }
+                break
+            case "contradiction":
+
+                newJustification(goalSentence.id, "⊥e", [focusSentence.id], dispatch)
+                dispatch({type: "UNSET GOAL"})
+
+                break
+            //⊥
 
         }
     }
