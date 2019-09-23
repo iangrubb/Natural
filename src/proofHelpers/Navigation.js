@@ -29,8 +29,8 @@ const Navigation = () => {
         <Container>
             <h3 style={{margin:'4px'}}>Navigate</h3>
             <Buttons>
-                <Button text={"back"}/>
-                <Button text={"forward"}/>
+                <Button text={"back"} active={true}/>
+                <Button text={"forward"} active={true}/>
             </Buttons>
         </Container>
     );

@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux'
+
 import styled from 'styled-components'
 
 import Button from '../userInterface/Button'
@@ -7,7 +9,7 @@ import display from '../helpers/display'
 
 const Container = styled.div`
     width: 90%;
-    height: 16%;
+    height: 20%;
 
     background: #ccc;
 
@@ -28,20 +30,41 @@ const TextContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    
+    background: #ddd;
+    border: 2px solid #aaa;
+    border-radius: 4px;
 `
 
-const Goal = () => {
+const Goal = props => {
     return (
         <Container>
             {false ?
             <h1>Proof Complete!</h1> :
             <>
-                <h3 style={{margin:'0'}}>Current Goal</h3>
-                <TextContainer>{"<put goal here>"}</TextContainer>
-                <Button text={'change'}/>
+                <h3 style={{margin:'4px'}}>Current Goal</h3>
+                <TextContainer>{props.goalSentence}</TextContainer>
+                <Button text={'change'} active={props.currentGoal && !props.currentFocus} onClick={props.onClick(props.currentGoal && !props.currentFocus)}/>
             </>}
         </Container>
     );
 }
 
-export default Goal;
+const msp = () => {
+    return state => {
+        const goalSentence = state.currentGoal ? display(state.sentences.find(s=>s.id===state.currentGoal).content, true) : "None"
+
+        return {...state, goalSentence: goalSentence}
+    }
+}
+
+const mdp = dispatch => {
+    return {onClick: active => () => {
+        
+        if (active) {
+            dispatch({type: "UNSET GOAL"})
+        }
+    }}
+}
+
+export default connect(msp, mdp)(Goal)

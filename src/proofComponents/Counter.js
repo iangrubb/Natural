@@ -7,7 +7,7 @@ const Container = styled.div`
     width: 40px;
     height: 40px;
 
-    margin: ${props => props.goal?'80px':'10px'} 0 10px 0;
+    margin: ${props => props.goal?'75px':'5px'} 0 10px 0;
     font-weight: 700;
     font-size: 1.4em;
 
@@ -21,8 +21,8 @@ const Container = styled.div`
 
 const Counter = props => {
     return (
-        <Container goal={props.goal} dark={props.firstGoalPosition > props.order - 1}>
-           {props.firstGoalPosition > props.order - 1 ? props.order : '?'}
+        <Container goal={props.goal} dark={props.display}>
+           {props.display ? props.order : '?'}
         </Container>
     );
 }
@@ -30,7 +30,9 @@ const Counter = props => {
 const msp = () => {
     return (state, ownProps) => {
         const sentence = state.sentences.find(s=>s.id === ownProps.id)
-        return {...state, goal: !sentence.justificationId}
+
+
+        return {...state, goal: !sentence.justificationId, display: ownProps.firstGoalPosition < 0 || ownProps.firstGoalPosition > ownProps.order - 1}
     }
 }
 

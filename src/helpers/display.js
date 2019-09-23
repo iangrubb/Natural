@@ -12,6 +12,8 @@ const display = (content, main) => {
     switch(content.type){
         case "atom":
             return <Part>{content.letter}</Part>
+        case "contradiction":
+            return <Part>⊥</Part>
         case "negation":
             return <Part>¬{display(content.left, false)}</Part>
         case "conjunction":

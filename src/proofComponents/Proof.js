@@ -6,7 +6,7 @@ import Sentence from './Sentence';
 
 const Container = styled.div`
 
-    margin: 0 0 0 ${props=> props.depth * 20}px;
+    margin: 2px 0 0 ${props => props.depth===1? '0': '30'}px;
     border-left: solid black 4px;
     width: 90%;
     
@@ -27,7 +27,7 @@ const Else = styled.div`
 
 const Proof = props => {
     return (
-        <Container depth={0}>
+        <Container depth={props.depth}>
             <Premises>
                 {props.children.slice(0, props.premiseCount).map(id => <Sentence key={id} id={id}/>)}
             </Premises>
@@ -46,12 +46,24 @@ const msp = () => {
             if (c % 2 === 0) {
                 const line = state.sentences.find(s=> s.id === c)
                 const just = state.justifications.find(j=> j.id === line.justificationId)
-                return just ? just.type !== "Premise" : true
+                return just ? just.type !== "Premise" && just.type !== "Assumption" : true
             } else {
                 return true
             }
         })
-        return {...state, children: children, premiseCount: children.findIndex(x=> x===firstAfterLine) }
+
+        // OR ASSUMPTION
+
+        const depth = proofId => {
+            if (proofId === state.initialProofId) {
+                return 1
+            } else {
+                const parent = state.proofs.find( p => p.children.includes(proofId))
+                return depth(parent.id) + 1
+            }
+        }
+
+        return {...state, children: children, premiseCount: children.findIndex(x=> x===firstAfterLine), depth: depth(ownProps.id)}
     }
 }
 

@@ -16,7 +16,7 @@ import PromptContainer from '../proofHelpers/PromptContainer'
 
 const Page = styled.div`
     width: calc(100% - 20px);
-    height: calc(100% - 60px);
+    height: calc(100% - 50px);
 
     display: flex;
     justify-content: center;
@@ -53,8 +53,6 @@ const Column = styled.div`
 
     background: #ccc;
 
-    overflow: scroll;
-
     padding: 10px 0 0 0;
 
     display: flex;
@@ -63,17 +61,18 @@ const Column = styled.div`
 `
 
 const ShowProof = props => {
+    console.log(props)
     return (
         <Page>
             <Proof>
-                <Column width={80} align={"center"}>
+                <Column width={60} align={"center"}>
                     {props.lines.map( (id, idx) => <Counter key={id} id={id} order={idx + 1} firstGoalPosition={props.firstGoalPosition}/>)}
                 </Column>
-                <Column width={200} align={"flex-start"}>
+                <Column width={240} align={"flex-start"}>
                     <ProofR key={props.initialProofId} id={props.initialProofId} />
                 </Column>
-                <Column width={100} align={"center"}>
-                    {props.lines.map( id => <Justification key={id} id={id}/>)}
+                <Column width={140} align={"center"}>
+                    {props.lines.map( id => <Justification key={id} id={id} settled={props.settled}/>)}
                 </Column>
             </Proof>
             <Interactions>
@@ -92,15 +91,18 @@ const msp = () => {
         const initialProof = state.proofs.find(p => p.id === state.initialProofId)
 
         const extract = children => {
-            return children.map( id => (id%2===0) ? id : state.proofs.find(p=> p.id === id).children)
+            return children.flatMap( id => (id%2===0) ? [id] : extract(state.proofs.find(p=> p.id === id).children))
         }
 
         const lines = extract(initialProof.children)
 
+        const elements = state.sentences
+
         const firstGoal = lines.find( l => !state.sentences.find( s => s.id === l).justificationId )
+        const firstGoalPosition = lines.findIndex(l=>l===firstGoal)
 
 
-        return {...state, lines: lines.flat(Infinity), initialProof: initialProof, firstGoalPosition: lines.findIndex(l=>l===firstGoal)}
+        return {...state, lines: lines.flat(Infinity), initialProof: initialProof, firstGoalPosition: firstGoalPosition, settled: lines.slice(0, firstGoalPosition)}
     }
 }
 

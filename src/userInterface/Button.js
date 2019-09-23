@@ -7,16 +7,16 @@ const Container = styled.div`
     padding: 8px;
 
     border-radius: 4px;
-    box-shadow: 3px 2px 4px #555;
+    box-shadow: ${props => props.active ? '3px 2px 4px #555' : 'none'};
 
-    background: #333;
+    background: ${props => props.active ? '#333' : '#aaa'};
     color: #ddd;
 
-    transform: translateY(-2px);
+    transform: ${props => props.active ? 'translateY(-2px)' : 'none'};
 
     :hover {
-        transform: translateY(-2px) scale(1.02);
-        color: #eee;
+        transform: ${props => props.active ? 'translateY(-2px) scale(1.02)' : 'none'};
+        color: ${props => props.active ? '#eee' : '#ddd'};
     }
 
     :active {
@@ -27,7 +27,7 @@ const Container = styled.div`
 
 const Button = props => {
     return (
-        <Container>
+        <Container active={props.active} onClick={props.onClick}>
             {props.text}
         </Container>
     );

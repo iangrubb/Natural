@@ -32,7 +32,7 @@ const Content = styled.div`
 
     font-size: 1.2em;
 
-    background: #eee;
+    background: #ddd;
     border: 2px solid #aaa;
     border-radius: 4px;
 
@@ -42,7 +42,7 @@ const Content = styled.div`
 const Message = () => {
     return (
         <Container>
-            <Title><h3 style={{margin:'0'}}>Notes</h3></Title>
+            <Title><h3 style={{margin:'4px'}}>Details</h3></Title>
             <Content>
                 
             </Content>  

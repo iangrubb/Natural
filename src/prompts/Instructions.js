@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components'
 
 const Container = styled.div`
-    width: 80%;
+
+    padding: 5%;
+
     height: 60%;
 
     display: flex;
@@ -11,7 +13,12 @@ const Container = styled.div`
     align-items: center;
     text-align: center;
 
-    font-size: 1.2em;
+    font-size: 1em;
+    font-weight: 700;
+
+    background: #ddd;
+    border: 2px solid #aaa;
+    border-radius: 4px;
 
 
 `
