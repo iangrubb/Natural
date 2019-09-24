@@ -9,7 +9,7 @@ import display from '../helpers/display'
 
 const Container = styled.div`
     width: 90%;
-    height: 20%;
+    height: 16%;
 
     background: #ccc;
 

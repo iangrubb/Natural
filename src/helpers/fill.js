@@ -4,7 +4,7 @@
 import sentenceEquality from '../helpers/sentenceEquality'
 
 
-const fill = (state, goalSentence, focusSentence, options, dispatch) => {
+const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRecord) => {
 
     // ID Auto-incrementation
 
@@ -82,28 +82,49 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
 
     // Intro Rules
     if (goalSentence.id === focusSentence.id) {
-        switch(focusSentence.content.type) {
-            case "conjunction":
-                const leftId = newSentence(focusSentence.content.left, goalSentence.id, parentId, dispatch)
-                const rightId = newSentence(focusSentence.content.right, goalSentence.id, parentId, dispatch)
-                newJustification(goalSentence.id, "&i", [leftId, rightId], dispatch)
-                dispatch({type: "SET GOAL", newId: leftId})
+        
+        switch(options.rule) {
+            case "dne":
+                const dnId = newSentence({type:"negation", right:{type:"negation", right: focusSentence.content}}, goalSentence.id, parentId, dispatch)
+                newJustification(goalSentence.id, "DNE", [dnId], dispatch)
+                dispatch({type: "SET GOAL", newId: dnId})
                 break
-            case "disjunction":
-                const disId = newSentence(focusSentence.content[options.side], goalSentence.id, parentId, dispatch)
-                newJustification(goalSentence.id, "∨i", [disId], dispatch)
-                dispatch({type: "SET GOAL", newId: disId})
+            case "reit":
+                console.log(options)
+                if (options.copyId) {
+                    newJustification(goalSentence.id, "Reiteration", [options.copyId], dispatch)
+                    dispatch({type: "UNSET GOAL"})
+                }
                 break
-            case "conditional":
-                const goalIds = newProof(focusSentence.content.left, focusSentence.content.right, goalSentence.id, parentId, dispatch)
-                newJustification(goalSentence.id, "→i", [goalIds.main], dispatch)
-                dispatch({type: "SET GOAL", newId: goalIds.sub})
+            case "exp":
+                const expId = newSentence({type:"contradiction"}, goalSentence.id, parentId, dispatch)
+                newJustification(goalSentence.id, "⊥e", [expId], dispatch)
+                dispatch({type: "SET GOAL", newId: expId})
                 break
-            case "negation":
-                const Ids = newProof(focusSentence.content.right, {type: "contradiction"}, goalSentence.id, parentId, dispatch)
-                newJustification(goalSentence.id, "¬i", [Ids.main], dispatch)
-                dispatch({type: "SET GOAL", newId: Ids.sub})
-                break
+            case "canon":
+                switch(focusSentence.content.type) {
+                    case "conjunction":
+                        const leftId = newSentence(focusSentence.content.left, goalSentence.id, parentId, dispatch)
+                        const rightId = newSentence(focusSentence.content.right, goalSentence.id, parentId, dispatch)
+                        newJustification(goalSentence.id, "&i", [leftId, rightId], dispatch)
+                        dispatch({type: "SET GOAL", newId: leftId})
+                        break
+                    case "disjunction":
+                        const disId = newSentence(focusSentence.content[options.side], goalSentence.id, parentId, dispatch)
+                        newJustification(goalSentence.id, "∨i", [disId], dispatch)
+                        dispatch({type: "SET GOAL", newId: disId})
+                        break
+                    case "conditional":
+                        const goalIds = newProof(focusSentence.content.left, focusSentence.content.right, goalSentence.id, parentId, dispatch)
+                        newJustification(goalSentence.id, "→i", [goalIds.main], dispatch)
+                        dispatch({type: "SET GOAL", newId: goalIds.sub})
+                        break
+                    case "negation":
+                        const Ids = newProof(focusSentence.content.right, {type: "contradiction"}, goalSentence.id, parentId, dispatch)
+                        newJustification(goalSentence.id, "¬i", [Ids.main], dispatch)
+                        dispatch({type: "SET GOAL", newId: Ids.sub})
+                        break
+                }
         }
 
     // Elim Rules
@@ -182,9 +203,8 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
         }
     }
 
-
-
     dispatch({type: "UNSET FOCUS"})
+    setChoiceRecord(null)
 }
 
 

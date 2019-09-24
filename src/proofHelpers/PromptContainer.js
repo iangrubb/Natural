@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux'
 
 import styled from 'styled-components'
 
 import Instructions from '../prompts/Instructions'
 import Options from '../prompts/Options'
+import IntroChoice from '../prompts/IntroChoice'
 
 import fill from '../helpers/fill'
 import findAbove from '../helpers/findAbove'
@@ -12,7 +13,7 @@ import sentenceEquality from '../helpers/sentenceEquality'
 
 const Container = styled.div`
     width: 90%;
-    height: 20%;
+    height: 30%;
 
     background: #ccc;
 
@@ -36,8 +37,8 @@ const Content = styled.div`
 
 
 
-const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
-
+const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord, setChoiceRecord) => {
+    
     if (!state.sentences.find(s=> !s.jusificationId)) {
         return null
     } else if (!goalSentence) {
@@ -46,60 +47,108 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
         return <Instructions text="choose a focus sentence"/>
     } else {
         if (goalSentence.id === focusSentence.id) {
-            
+
             // Intro Rules
-
-            switch (focusSentence.content.type) {
-                case "conjunction":
-                    return (
-                        <Options
-                            instructions={"Do you plan to prove both conjuncts?"}
-                            prompts={["confirm", "cancel"]}
-                            actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)},
-                                ()=>{dispatch({type: "UNSET FOCUS"})}
-                        ]}/>
-                    )
-                case "disjunction":
-                    return (
-                        <Options
-                            instructions={"Which disjunct do you plan to prove?"}
-                            prompts={["left", "right"]}
-                            actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {side: "left"}, dispatch)},
-                                ()=>{fill(state, goalSentence, focusSentence, {side: "right"}, dispatch)}
-                        ]}/>
-                    )
-                case "conditional":
-                    return (
-                        <Options
-                            instructions={"Proving a conditional requires proving its consequent after assuming its antecedent."}
-                            prompts={["confirm", "cancel"]}
-                            actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)},
-                                ()=>{dispatch({type: "UNSET FOCUS"})}
-                        ]}/>
-                    )
-                case "negation":
-                    return (
-                        <Options
-                            instructions={"Proving a negation requires proving a contradiction after assuming its opposite."}
-                            prompts={["ok"]}
-                            actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
-                        ]}/>
-                    )
-                case "contradiction":
-                    return (
-                        <Options
-                            instructions={"Derive this by proving some sentence and its negation."}
-                            prompts={["ok"]}
-                            actions={[
-                                ()=>{dispatch({type: "UNSET FOCUS"})}
-                        ]}/>
-                    ) 
+            if (choiceRecord) {
+                switch (choiceRecord) {
+                    case "dne":
+                        return (
+                            <Options
+                                instructions={"You can prove this sentence by proving its double negation."}
+                                prompts={["ok"]}
+                                actions={[
+                                    ()=>{fill(state, goalSentence, focusSentence, {rule: "dne"}, dispatch, setChoiceRecord)},
+                            ]}/>
+                        )
+                    case "reit":
+                        const copy = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content) && findAbove(goalSentence.id, s.id, state.proofs))
+                        
+                        if (copy) {
+                            return (
+                                <Options
+                                    instructions={"You can achieve this goal since you proved it above."}
+                                    prompts={["ok"]}
+                                    actions={[
+                                        ()=>{fill(state, goalSentence, focusSentence, {rule: "reit", copyId: copy.id}, dispatch, setChoiceRecord)}
+                                    ]}
+                                />
+                            )
+                        } else {
+                            return (
+                                <Options
+                                    instructions={"This rule only has an effect if you proved the goal above."}
+                                    prompts={["ok"]}
+                                    actions={[
+                                        ()=>{fill(state, goalSentence, focusSentence, {rule: "reit", copyId: null}, dispatch, setChoiceRecord)}
+                                    ]}
+                                />
+                            )
+                        }
+                    case "exp":
+                        return (
+                            <Options
+                                instructions={"You can prove this sentence by proving a contradiction."}
+                                prompts={["ok"]}
+                                actions={[
+                                    ()=>{fill(state, goalSentence, focusSentence, {rule: "exp"}, dispatch, setChoiceRecord)},
+                            ]}/>
+                        )
+                    case "canon":
+                        switch (focusSentence.content.type) {
+                            case "conjunction":
+                                return (
+                                    <Options
+                                        instructions={"Do you plan to prove both conjuncts?"}
+                                        prompts={["confirm", "cancel"]}
+                                        actions={[
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch, setChoiceRecord)},
+                                            ()=>{dispatch({type: "UNSET FOCUS"})}
+                                    ]}/>
+                                )
+                            case "disjunction":
+                                return (
+                                    <Options
+                                        instructions={"Which disjunct do you plan to prove?"}
+                                        prompts={["left", "right"]}
+                                        actions={[
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", side: "left"}, dispatch, setChoiceRecord)},
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", side: "right"}, dispatch, setChoiceRecord)}
+                                    ]}/>
+                                )
+                            case "conditional":
+                                return (
+                                    <Options
+                                        instructions={"Proving a conditional requires proving its consequent after assuming its antecedent."}
+                                        prompts={["confirm", "cancel"]}
+                                        actions={[
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch, setChoiceRecord)},
+                                            ()=>{dispatch({type: "UNSET FOCUS"})}
+                                    ]}/>
+                                )
+                            case "negation":
+                                return (
+                                    <Options
+                                        instructions={"Proving a negation requires proving a contradiction after assuming its opposite."}
+                                        prompts={["ok"]}
+                                        actions={[
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch, setChoiceRecord)}
+                                    ]}/>
+                                )
+                            case "contradiction":
+                                return (
+                                    <Options
+                                        instructions={"Derive this by proving some sentence and its negation."}
+                                        prompts={["ok"]}
+                                        actions={[
+                                            ()=>{dispatch({type: "UNSET FOCUS"})}
+                                    ]}/>
+                                ) 
+                        }
+                }
+            } else {
+                return < IntroChoice setChoiceRecord={setChoiceRecord} />
             }
-
+            
         } else {
            
             // Elim Rules
@@ -111,8 +160,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                             instructions={"Which conjunct do you want to use?"}
                             prompts={["left", "right"]}
                             actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {side: "left"}, dispatch)},
-                                ()=>{fill(state, goalSentence, focusSentence, {side: "right"}, dispatch)}
+                                ()=>{fill(state, goalSentence, focusSentence, {side: "left"}, dispatch, setChoiceRecord)},
+                                ()=>{fill(state, goalSentence, focusSentence, {side: "right"}, dispatch, setChoiceRecord)}
                         ]}/>
                     )
                 case "conditional":
@@ -124,7 +173,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                             instructions={"You already have the antecedent, so you can use the consequent."}
                             prompts={["ok"]}
                             actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {antecedent: antecedent}, dispatch)}
+                                ()=>{fill(state, goalSentence, focusSentence, {antecedent: antecedent}, dispatch, setChoiceRecord)}
                         ]}/>
                         )
                     } else {
@@ -133,7 +182,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                             instructions={"In order to use the consequent, you must prove the antecedent."}
                             prompts={["ok"]}
                             actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {antecedent: antecedent}, dispatch)}
+                                ()=>{fill(state, goalSentence, focusSentence, {antecedent: antecedent}, dispatch, setChoiceRecord)}
                         ]}/>
                         )
                     }
@@ -143,7 +192,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                             instructions={"You can derive the goal by deriving it from each disjunct."}
                             prompts={["ok"]}
                             actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
+                                ()=>{fill(state, goalSentence, focusSentence, {}, dispatch, setChoiceRecord)}
                         ]}/>
                     )
                 case "negation":
@@ -155,7 +204,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                             instructions={"You've already proved contadictory sentences, so you can derive a contradiction."}
                             prompts={["ok"]}
                             actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {unnegated: unnegated}, dispatch)}
+                                ()=>{fill(state, goalSentence, focusSentence, {unnegated: unnegated}, dispatch, setChoiceRecord)}
                         ]}/>
                         )
                     } else {
@@ -164,7 +213,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                             instructions={"In order to derive a contradiction, you must prove the non-negated sentence."}
                             prompts={["ok"]}
                             actions={[
-                                ()=>{fill(state, goalSentence, focusSentence, {unnegated: unnegated}, dispatch)}
+                                ()=>{fill(state, goalSentence, focusSentence, {unnegated: unnegated}, dispatch, setChoiceRecord)}
                         ]}/>
                         )
                     }
@@ -174,15 +223,11 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
                         instructions={"Anything follows from a contradiction, including your goal."}
                         prompts={["ok"]}
                         actions={[
-                            ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
+                            ()=>{fill(state, goalSentence, focusSentence, {}, dispatch, setChoiceRecord)}
                     ]}/>
                     )
-
-
-
-
-
             }
+
         }
     }
 
@@ -193,11 +238,14 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch) => {
 
 
 const PromptContainer = props => {
+
+    const [choiceRecord, setChoiceRecord] = useState(null)
+
     return (
         <Container>
             <h3 style={{margin:'4px'}}>Instructions</h3>
             <Content>
-                {props.choosePrompt(props.state, props.goalSentence, props.focusSentence)}
+                {props.choosePrompt(props.state, props.goalSentence, props.focusSentence, choiceRecord, setChoiceRecord)}
             </Content>
         </Container>
     );
@@ -212,7 +260,7 @@ const msp = () => {
 
 const mdp = dispatch => {
     return {
-        choosePrompt: (state, goal, focus) => choosePrompt(state, goal, focus, dispatch)
+        choosePrompt: (state, goal, focus, choiceRecord, setChoiceRecord) => choosePrompt(state, goal, focus, dispatch, choiceRecord, setChoiceRecord)
     }
 }
 
