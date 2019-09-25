@@ -27,7 +27,6 @@ const TextContainer = styled.div`
     margin: 4px 0;
 
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     
@@ -39,11 +38,11 @@ const TextContainer = styled.div`
 const Goal = props => {
     return (
         <Container>
-            {false ?
-            <h1>Proof Complete!</h1> :
+            {props.complete ?
+            <h1 style={{textAlign:'center'}}>Proof Complete!</h1> :
             <>
                 <h3 style={{margin:'4px'}}>Current Goal</h3>
-                <TextContainer>{props.goalSentence}</TextContainer>
+                <TextContainer><div style={{display: 'flex', alignItems:'flex-end'}}>{props.goalSentence}</div></TextContainer>
                 <Button text={'change'} active={props.currentGoal && !props.currentFocus} onClick={props.onClick(props.currentGoal && !props.currentFocus)}/>
             </>}
         </Container>

@@ -52,8 +52,6 @@ const msp = () => {
             }
         })
 
-        // OR ASSUMPTION
-
         const depth = proofId => {
             if (proofId === state.initialProofId) {
                 return 1

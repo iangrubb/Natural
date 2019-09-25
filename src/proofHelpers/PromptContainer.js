@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import Instructions from '../prompts/Instructions'
 import Options from '../prompts/Options'
 import IntroChoice from '../prompts/IntroChoice'
+import ConstantChoice from '../prompts/ConstantChoice'
 
 import fill from '../helpers/fill'
 import findAbove from '../helpers/findAbove'
@@ -42,12 +43,11 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
     if (!state.sentences.find(s=> !s.jusificationId)) {
         return null
     } else if (!goalSentence) {
-        return <Instructions text="choose a goal sentence"/>
+        return <Instructions text="Select a goal sentence you want to work towards proving"/>
     } else if (!focusSentence) {
-        return <Instructions text="choose a focus sentence"/>
+        return <Instructions text= "Select a sentence to use its logic to achieve the current goal"/>
     } else {
         if (goalSentence.id === focusSentence.id) {
-
             // Intro Rules
             if (choiceRecord) {
                 switch (choiceRecord) {
@@ -96,23 +96,27 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
                     case "canon":
                         switch (focusSentence.content.type) {
                             case "conjunction":
+                                const foundLeft = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.left) && findAbove(goalSentence.id, s.id, state.proofs))
+                                const foundRight = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.right) && findAbove(goalSentence.id, s.id, state.proofs))
                                 return (
                                     <Options
-                                        instructions={"Do you plan to prove both conjuncts?"}
-                                        prompts={["confirm", "cancel"]}
+                                        instructions={"Proving a conjunction requires proving both conjuncts."}
+                                        prompts={["ok"]}
                                         actions={[
-                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch, setChoiceRecord)},
-                                            ()=>{dispatch({type: "UNSET FOCUS"})}
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", foundLeft: foundLeft, foundRight: foundRight}, dispatch, setChoiceRecord)}
                                     ]}/>
                                 )
                             case "disjunction":
+                                const disLeft = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.left) && findAbove(goalSentence.id, s.id, state.proofs))
+                                const disRight = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.right) && findAbove(goalSentence.id, s.id, state.proofs))
+
                                 return (
                                     <Options
                                         instructions={"Which disjunct do you plan to prove?"}
                                         prompts={["left", "right"]}
                                         actions={[
-                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", side: "left"}, dispatch, setChoiceRecord)},
-                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", side: "right"}, dispatch, setChoiceRecord)}
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", side: "left", found: disLeft}, dispatch, setChoiceRecord)},
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", side: "right", found: disRight}, dispatch, setChoiceRecord)}
                                     ]}/>
                                 )
                             case "conditional":
@@ -143,10 +147,24 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
                                             ()=>{dispatch({type: "UNSET FOCUS"})}
                                     ]}/>
                                 ) 
+                            case "existential":
+                                return (
+                                    <ConstantChoice instructions={"Chose a constant"} constants={state.globalConstants}
+                                    onClick={constant => () => fill(state, goalSentence, focusSentence, {rule: "canon", constant: constant}, dispatch, setChoiceRecord)}/>
+                                )
+                            case "universal":
+                                return (
+                                    <Options
+                                        instructions={"Prove everything has a property by proving that an arbitrary object has the property."}
+                                        prompts={["ok"]}
+                                        actions={[
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch, setChoiceRecord)}
+                                    ]}/>
+                                )
                         }
                 }
             } else {
-                return < IntroChoice setChoiceRecord={setChoiceRecord} />
+                return < IntroChoice setChoiceRecord={setChoiceRecord} atom={goalSentence.content.type === "atom"} />
             }
             
         } else {
@@ -226,6 +244,22 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
                             ()=>{fill(state, goalSentence, focusSentence, {}, dispatch, setChoiceRecord)}
                     ]}/>
                     )
+                case "universal":
+                    return (
+                        <ConstantChoice instructions={"Chose a constant"} constants={state.globalConstants}
+                        onClick={constant => () => fill(state, goalSentence, focusSentence, {constant: constant}, dispatch, setChoiceRecord)}/>
+                    )
+                case "existential":
+                    return (
+                        <Options
+                            instructions={"Using an existential sentence to achieve a goal requires showing how an arbitrary object's having the property in question shows the goal."}
+                            prompts={["ok"]}
+                            actions={[
+                                ()=>{fill(state, goalSentence, focusSentence, {}, dispatch, setChoiceRecord)}
+                        ]}/>
+                    )
+
+
             }
 
         }
@@ -243,14 +277,19 @@ const PromptContainer = props => {
 
     return (
         <Container>
+            {props.complete ? 
+            null :
+            <>
             <h3 style={{margin:'4px'}}>Instructions</h3>
             <Content>
                 {props.choosePrompt(props.state, props.goalSentence, props.focusSentence, choiceRecord, setChoiceRecord)}
             </Content>
+            </>
+            }
         </Container>
     );
 }
-
+ 
 const msp = () => {
     return (state, ownProps) => {
         

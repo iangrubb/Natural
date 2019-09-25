@@ -51,8 +51,6 @@ const active = (sentence, goal, focus, proofs) => {
     }
 }
 
-
-
 const msp = () => {
     return (state, ownProps) => {
         const sentence = state.sentences.find(s=>s.id === ownProps.id)

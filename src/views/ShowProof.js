@@ -15,7 +15,7 @@ import PromptContainer from '../proofHelpers/PromptContainer'
 
 
 const Page = styled.div`
-    width: calc(100% - 20px);
+    width: 100%;
     height: calc(100% - 50px);
 
     display: flex;
@@ -51,6 +51,8 @@ const Interactions = styled.div`
 const Column = styled.div`
     min-width: ${props=>props.width}px;
 
+    overflow: scroll;
+
     background: #ccc;
 
     padding: 10px 0 0 0;
@@ -76,10 +78,10 @@ const ShowProof = props => {
                 </Column>
             </Proof>
             <Interactions>
-                <Goal />
-                <PromptContainer/>
-                <Message />
-                <Navigation/>
+                <Goal complete={!props.firstGoal}/>
+                <PromptContainer complete={!props.firstGoal}/>
+                <Message complete={!props.firstGoal}/>
+                <Navigation />
             </Interactions>
         </Page>
     );
@@ -96,13 +98,11 @@ const msp = () => {
 
         const lines = extract(initialProof.children)
 
-        const elements = state.sentences
-
         const firstGoal = lines.find( l => !state.sentences.find( s => s.id === l).justificationId )
         const firstGoalPosition = lines.findIndex(l=>l===firstGoal)
 
 
-        return {...state, lines: lines.flat(Infinity), initialProof: initialProof, firstGoalPosition: firstGoalPosition, settled: lines.slice(0, firstGoalPosition)}
+        return {...state, lines: lines.flat(Infinity), initialProof: initialProof, firstGoal: firstGoal, firstGoalPosition: firstGoalPosition, settled: lines.slice(0, firstGoalPosition)}
     }
 }
 

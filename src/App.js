@@ -1,10 +1,13 @@
 import React from 'react'
-import './App.css'
+import { connect } from 'react-redux'
+
+
 
 import styled from 'styled-components'
 
-import ShowProof from './views/ShowProof'
 import NavBar from './views/NavBar'
+import ShowProof from './views/ShowProof'
+import Exercises from './views/Exercises'
 
 const Site = styled.div`
   width: 100vw;
@@ -17,13 +20,19 @@ const Site = styled.div`
   align-items: center;
 `
 
-function App() {
+const App = props => {
   return (
     <Site>
       < NavBar />
-      < ShowProof />
+      {props.initialProofId ? < ShowProof /> : < Exercises />}
     </Site>
   )
 }
 
-export default App;
+const msp = () => {
+  return state => {
+      return {initialProofId: state.initialProofId}
+  }
+}
+
+export default connect(msp)(App)

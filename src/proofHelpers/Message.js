@@ -39,13 +39,19 @@ const Content = styled.div`
     overflow: scroll;
 `
 
-const Message = () => {
+const Message = props => {
     return (
         <Container>
+            {props.complete ? 
+            null :
+            <>
             <Title><h3 style={{margin:'4px'}}>Details</h3></Title>
             <Content>
                 
-            </Content>  
+            </Content> 
+            </>
+            }
+             
         </Container>
     );
 }

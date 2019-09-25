@@ -39,9 +39,9 @@ const Instructions = styled.div`
 const IntroChoice = props => {
     return (
         <Container>
-            <Instructions>Do you want to use the main intro rule or a special rule?</Instructions>
+            <Instructions>{props.atom? "Which special rule do you want to use?" : "Do you want to use the main intro rule or a special rule?"}</Instructions>
             <ButtonContainer>
-                <Button text='Main Rule' active={true} onClick={()=>props.setChoiceRecord('canon')}/>
+                <Button text='Main Rule' active={!props.atom} onClick={()=>props.setChoiceRecord('canon')}/>
             </ButtonContainer>
             <ButtonContainer>
                 <Button text='DNE' active={true} onClick={()=> {props.setChoiceRecord('dne')}}/>

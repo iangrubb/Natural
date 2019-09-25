@@ -1,121 +1,19 @@
 
 import { combineReducers } from 'redux'
 
-// Direct proof test data
-
-// const defaultState = {
-//     initialProofId: 1,
-//     proofs: [
-//         {id: 1, children: [2, 4, 6]}
-//     ],
-//     sentences: [
-//         {id: 2, content: {type:"conjunction", left: {type:"atom", letter:"B"}, right: {type:"atom", letter:"C"}} , justificationId: 1},
-//         {id: 4, content: {type:"conditional", left: {type:"disjunction", left:{type:"atom", letter:"D"}, right:{type:"atom", letter:"C"}}, right: {type:"atom", letter:"A"}} , justificationId: 2},
-//         {id: 6, content: {type:"conjunction", left: {type:"atom", letter:"A"}, right: {type:"atom", letter:"B"}} , justificationId: null}
-//     ],
-//     justifications: [
-//         {id: 1, type:"Premise", citationIds:[]},
-//         {id: 2, type:"Premise", citationIds:[]},
-//     ],
-//     currentGoal: 6,
-//     currentFocus: null,
-//     proofCounter: 1,
-//     sentenceCounter: 6,
-//     justificationCounter: 2
-// }
-
-
-
-// Conditional proof test data
-
-// const defaultState = {
-//     initialProofId: 1,
-//     proofs: [
-//         {id: 1, children: [2, 4]}
-//     ],
-//     sentences: [
-//         {id: 2, content: {type:"conditional", left: {type:"conjunction", left:{type:"atom", letter:"A"}, right:{type:"atom", letter:"B"}}, right: {type:"atom", letter:"C"}} , justificationId: 1},
-//         {id: 4, content: {type:"conditional", left: {type:"atom", letter:"A"} , right: {type:"conditional", left: {type:"atom", letter:"B"} , right: {type:"atom", letter:"C"}}}},
-//     ],
-//     justifications: [
-//         {id: 1, type:"Premise", citationIds:[]},
-//     ],
-//     currentGoal: 4,
-//     currentFocus: null,
-//     proofCounter: 1,
-//     sentenceCounter: 4,
-//     justificationCounter: 1
-// }
-
-// OR ELIM Test Data
-
-// const defaultState = {
-//     initialProofId: 1,
-//     proofs: [
-//         {id: 1, children: [2, 4]}
-//     ],
-//     sentences: [
-//         {id: 2, content: {type:"disjunction", left: {type:"conjunction", left:{type:"atom", letter:"A"}, right:{type:"atom", letter:"B"}}, right: {type:"conjunction", left:{type:"atom", letter:"C"}, right:{type:"atom", letter:"D"}}} , justificationId: 1},
-//         {id: 4, content: {type:"disjunction", left: {type:"atom", letter:"A"} , right: {type:"atom", letter:"D"}}},
-//     ],
-//     justifications: [
-//         {id: 1, type:"Premise", citationIds:[]},
-//     ],
-//     currentGoal: 4,
-//     currentFocus: null,
-//     proofCounter: 1,
-//     sentenceCounter: 4,
-//     justificationCounter: 1
-// }
-
-
-
-
-// Negation without DNE data
-
-// const defaultState = {
-//     initialProofId: 1,
-//     proofs: [
-//         {id: 1, children: [2, 4]}
-//     ],
-//     sentences: [
-//         {id: 2, content: {type:"disjunction", left: {type:"atom", letter:"A"} , right: {type:"atom", letter:"B"}}, justificationId: 1},
-//         {id: 4, content: {type:"conditional", left: {type:"negation", right: {type:"atom", letter:"A"}} , right: {type:"atom", letter:"B"}}}
-//     ],
-//     justifications: [
-//         {id: 1, type:"Premise", citationIds:[]},
-//     ],
-//     currentGoal: 4,
-//     currentFocus: null,
-//     proofCounter: 1,
-//     sentenceCounter: 4,
-//     justificationCounter: 1
-// }
-
-// not (a or b) to not a and not b
 
 const defaultState = {
-    initialProofId: 1,
-    proofs: [
-        {id: 1, children: [2, 4]}
-    ],
-    sentences: [
-        {id: 2, content: {type:"negation", right: {type:"disjunction", left: {type:"atom", letter:"A"} , right: {type:"atom", letter:"B"}}}, justificationId: 1},
-        {id: 4, content: {type:"conjunction", left: {type:"negation", right: {type:"atom", letter:"A"}} , right: {type:"negation", right: {type:"atom", letter:"B"}}}}
-    ],
-    justifications: [
-        {id: 1, type:"Premise", citationIds:[]},
-    ],
-    currentGoal: 4,
+    initialProofId: null,
+    proofs: [],
+    sentences: [],
+    justifications: [],
+    currentGoal: null,
     currentFocus: null,
-    proofCounter: 1,
-    sentenceCounter: 4,
-    justificationCounter: 1
+    proofCounter: null,
+    sentenceCounter: null,
+    justificationCounter: null,
+    globalConstants: []
 }
-
-
-
-
 
 
 const insertBeforeIn = (inserted, before, array) => {
@@ -124,9 +22,10 @@ const insertBeforeIn = (inserted, before, array) => {
 }
 
 
-
 const handleInitialProofId = (state = defaultState.initialProofId, action) => {
     switch (action.type) {
+        case "LOAD PROOF ID":
+            return 1
         default:
             return state
     }
@@ -134,6 +33,8 @@ const handleInitialProofId = (state = defaultState.initialProofId, action) => {
 
 const handleProofs = (state = defaultState.proofs, action) => {
     switch (action.type) {
+        case "LOAD PROOFS":
+            return [{id: 1, children: action.children}]
         case "ADD ELEMENT":
             return state.map( p => p.id === action.proofId ? {...p, children: insertBeforeIn(action.newId, action.goalId, p.children)} : p)
         case "NEW PROOF":
@@ -146,6 +47,8 @@ const handleProofs = (state = defaultState.proofs, action) => {
 const handleSentences = (state = defaultState.sentences, action) => {
 
     switch (action.type) {
+        case "LOAD SENTENCES":
+            return action.sentences
         case "NEW SENTENCE":
             return [...state, {id: action.id, content: action.content}]
         case "ADD JUSTIFICATION":
@@ -157,6 +60,10 @@ const handleSentences = (state = defaultState.sentences, action) => {
 
 const handleJustifications = (state = defaultState.justifications, action) => {
     switch (action.type) {
+        case "LOAD JUSTIFICATIONS":
+            const test = action.premises.map( (p, idx) => {return {id: idx + 1, type: "Premise", citationIds:[]}})
+            console.log("test", test)
+            return test
         case "NEW JUSTIFICATION":
             return [...state, {id: action.id, type: action.ruleType, citationIds: action.citationIds} ]
         default:
@@ -188,6 +95,8 @@ const handleCurrentFocus = (state = defaultState.currentFocus, action) => {
 
 const handleProofCounter = (state = defaultState.proofCounter, action) => {
     switch (action.type) {
+        case "LOAD PROOF COUNTER":
+            return 1
         case "INCREMENT PROOF COUNTER":
             return state + 2
         default:
@@ -197,6 +106,8 @@ const handleProofCounter = (state = defaultState.proofCounter, action) => {
 
 const handleSentenceCounter = (state = defaultState.sentenceCounter, action) => {
     switch (action.type) {
+        case "LOAD SENTENCE COUNTER":
+            return action.counter
         case "INCREMENT SENTENCE COUNTER":
             return state + 2
         default:
@@ -206,8 +117,21 @@ const handleSentenceCounter = (state = defaultState.sentenceCounter, action) => 
 
 const handleJustificationCounter = (state = defaultState.justificationCounter, action) => {
     switch (action.type) {
+        case "LOAD JUSTIFICATION COUNTER":
+            return action.counter
         case "INCREMENT JUSTIFICATION COUNTER":
             return state + 1
+        default:
+            return state
+    }
+}
+
+const handleGlobalConstants = (state = defaultState.globalConstants, action) => {
+    switch (action.type) {
+        case "LOAD GLOBAL CONSTANTS":
+            return action.constants
+        case "ADD CONSTANT":
+            return [...state, action.newConstant]
         default:
             return state
     }
@@ -223,7 +147,8 @@ const rootReducer = combineReducers({
     currentFocus: handleCurrentFocus,
     proofCounter: handleProofCounter,
     sentenceCounter: handleSentenceCounter,
-    justificationCounter: handleJustificationCounter
+    justificationCounter: handleJustificationCounter,
+    globalConstants: handleGlobalConstants
 })
 
 export default rootReducer
