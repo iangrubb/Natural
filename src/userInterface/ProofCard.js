@@ -8,8 +8,8 @@ import display from '../helpers/display'
 
 const Container = styled.div`
 
-    width: 180px;
-    height: 200px;
+    width: 240px;
+    height: 160px;
 
     margin: 2%;
     padding: 10px;
@@ -27,8 +27,10 @@ const Container = styled.div`
 `
 
 const Proof = styled.div`
-    width: 90%;
+    width: 96%;
     height: 76%;
+
+    overflow: scroll;
 
     background: #ddd;
     border: 2px solid #aaa;

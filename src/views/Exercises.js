@@ -488,29 +488,21 @@ const exerciseData = [
     ],
     proofs: [
         {premises: [
-
+            {type: "universal", variable: 1, right: {type:"universal", variable: 2, right: {type:"conditional", left: {type:"atom", predicate:"R", terms:[1, 2]} , right: {type:"atom", predicate:"R", terms:[2, 1]}}}},
+            {type: "universal", variable: 1, right: {type:"universal", variable: 2, right: {type:"universal", variable: 3 , right: {type: "conditional", left: {type: "conjunction", left: {type:"atom", predicate:"R", terms:[1, 2]}, right: {type:"atom", predicate:"R", terms:[2, 3]}} , right: {type:"atom", predicate:"R", terms:[1, 3]}}}}}
         ],conclusion:
-            {}
+            {type: "universal", variable: 1, right: {type:"atom", predicate:"R", terms:[1, 1]}}
         },
         {premises: [
-
+            {type: "existential", variable: 1, right: {type: "universal", variable: 2, right: {type:"atom", predicate: "R", terms: [1, 2]}}}
         ],conclusion:
-            {}
+            {type: "universal", variable: 1, right: {type: "existential", variable: 2, right: {type:"atom", predicate: "R", terms: [2, 1]}}}
         },
         {premises: [
-
+            {type: "universal", variable: 1, right: {type:"conditional", left: {type:"existential", variable: 2, right:{type:"atom", predicate:"R", terms:[1, 2]}} , right: {type:"atom", predicate:"R", terms:["a", 1]}}},
+            {type:"negation", right: {type:"existential", variable: 1, right: {type: "conjunction", left: {type:"atom", predicate:"P", terms:[1]} , right: {type:"existential", variable: 2, right: {type:"atom", predicate:"R", terms:[2, 1]}} }}}
         ],conclusion:
-            {}
-        },
-        {premises: [
-
-        ],conclusion:
-            {}
-        },
-        {premises: [
-
-        ],conclusion:
-            {}
+            {type: "universal", variable: 1, right: {type:"conditional", left: {type:"atom", predicate: "P", terms:[1]} , right: {type: "negation", right:{type:"existential", variable: 2, right: {type:"atom", predicate:"R", terms:[1, 2]}}}}}
         },
     ]},
     

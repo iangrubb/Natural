@@ -11,6 +11,19 @@ const Part = styled.div`
 
     transform: translateY(${props=> props.sub ? '4px' : '0px'})
 `
+
+const variableDisplay = number => {
+
+    if (number === 1) {
+        return <Part size={0.9}>x</Part>
+    } else if (number === 2) {
+        return <Part size={0.9}>y</Part>
+    } else if (number === 3){
+        return <Part size={0.9}>z</Part>
+    } else {
+        return <><Part size={0.9}>x</Part><Part size={0.6} sub={true}>{number}</Part></>
+    }    
+}
  
 const display = (content, main) => {
 
@@ -19,19 +32,19 @@ const display = (content, main) => {
             if (content.letter) {
                 return <Part >{content.letter}</Part>
             } else {
-                return <><Part>{content.predicate}</Part>{ content.terms.map( (t, idx) => {
+                return <><Part>{content.predicate}</Part>{ content.terms.map( t => {
                     if (typeof t === 'string') {
-                        return <Part key={idx} size={0.9}>{t}</Part>
+                        return <Part size={0.9}>{t}</Part>
                     } else {
-                        return <><Part key={idx} size={0.9}>x</Part><Part size={0.6} sub={true}>{t}</Part></>
+                        return variableDisplay(t)
                     }
                 })}                
                 </>
             }
         case "universal":
-            return <Part>  <Part bold={true} size={1.2}>∀</Part>  <Part size={0.9}>x</Part><Part size={0.6} sub={true}>{content.variable}</Part>{display(content.right, false)}</Part>
+            return <Part>  <Part bold={true} size={1.2}>∀</Part>  {variableDisplay(content.variable)}  {display(content.right, false)}</Part>
         case "existential":
-            return <Part>  <Part bold={true} size={1.2}>∃</Part>  <Part size={0.9}>x</Part><Part size={0.6} sub={true}>{content.variable}</Part>{display(content.right, false)}</Part>
+            return <Part>  <Part bold={true} size={1.2}>∃</Part>  {variableDisplay(content.variable)}  {display(content.right, false)}</Part>
         case "contradiction":
             return <Part>⊥</Part>
         case "negation":

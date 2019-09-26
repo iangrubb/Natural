@@ -6,7 +6,7 @@ const sentenceEquality = (x, y) => {
         if (x.letter && y.letter) {
             return x.letter === y.letter
         } else if (x.predicate && y.predicate) {
-            return x.predicate === y.predicate && x.terms.length === y.terms.length && y.terms.every((t, idx) => t === y.terms[idx])
+            return x.predicate === y.predicate && x.terms.length === y.terms.length && x.terms.every((t, idx) => t === y.terms[idx])            
         } else {
             return false
         }

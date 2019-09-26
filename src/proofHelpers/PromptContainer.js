@@ -139,12 +139,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
                                 )
                             case "contradiction":
                                 return (
-                                    <Options
-                                        instructions={"Derive this by proving some sentence and its negation. (make this a proper rule!!)"}
-                                        prompts={["ok"]}
-                                        actions={[
-                                            ()=>{dispatch({type: "UNSET FOCUS"})}
-                                    ]}/>
+                                    <Instructions text="Select a sentence such that you can prove its opposite."/>
                                 ) 
                             case "existential":
                                 return (
@@ -163,7 +158,23 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
                         }
                 }
             } else {
-                return < IntroChoice setChoiceRecord={setChoiceRecord} contradiction={goalSentence.content.type==="contradiction"} atom={goalSentence.content.type === "atom"} />
+
+                const introChoiceHandler = choice => () => {
+
+                    setChoiceRecord(choice)
+
+                    if (choice === "canon" && goalSentence.content.type === "contradiction") {
+
+                        const availableAbove = state.sentences.filter( s => findAbove(goalSentence.id, s.id, state.proofs))
+
+                        const fillForExplosion = chosenId => {
+                            dispatch({type: "UNSET SENTENCE CHOOSER"})
+                            fill(state, goalSentence, focusSentence, {rule: "canon", chosenId: chosenId}, dispatch, setChoiceRecord)
+                        }
+                        dispatch({type: "SET SENTENCE CHOOSER", sentences: availableAbove, callback: fillForExplosion})
+                    }
+                }
+                return < IntroChoice onClick={introChoiceHandler} contradiction={goalSentence.content.type==="contradiction"} atom={goalSentence.content.type === "atom"} />
             }
             
         } else {

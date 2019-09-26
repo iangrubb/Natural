@@ -27,7 +27,7 @@ const Container = styled.div`
 
 const Sentence = props => {
     return (
-        <Container isGoal={props.isGoal} active={props.active} onClick={props.active ? props.onClick(props.globalGoal, props.focus, props.sentence, props.options) : null}>
+        <Container isGoal={props.isGoal} active={props.active} onClick={props.active ? props.onClick(props.globalGoal, props.focus, props.sentence, props.options, props.sentenceChooser) : null}>
             {display(props.sentence.content, true)}
         </Container>
     );
@@ -39,7 +39,7 @@ const Sentence = props => {
 
 
 
-const active = (sentence, goal, focus, proofs) => {
+const active = (sentence, goal, focus, proofs, sentenceChooser) => {
     if (!goal) {
         // No goal set
         return !sentence.justificationId
@@ -47,7 +47,7 @@ const active = (sentence, goal, focus, proofs) => {
         // No focus set
         return (sentence.id === goal.id) || (sentence.content.type !== "atom" && findAbove(goal.id, sentence.id, proofs))
     } else {
-        return false
+        return sentenceChooser.sentences.find( s => s.id === sentence.id)
     }
 }
 
@@ -63,18 +63,20 @@ const msp = () => {
             sentence: sentence,
             globalGoal: goal,
             focus: focus,
-            active: active(sentence, goal, focus, state.proofs)
+            active: active(sentence, goal, focus, state.proofs, state.sentenceChooser)
         }
     }
 }
 
 const mdp = dispatch => {
-    return {onClick: (goal, focus, sentence, options) => () => {
+    return {onClick: (goal, focus, sentence, options, sentenceChooser) => () => {
 
         if (!goal) {
             dispatch({type: "SET GOAL", newId: sentence.id})
         } else if (!focus) {
             dispatch({type: "SET FOCUS", newId: sentence.id})
+        } else {
+            sentenceChooser.callback(sentence.id)
         }
         
     }}

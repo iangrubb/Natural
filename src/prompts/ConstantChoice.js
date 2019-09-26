@@ -54,7 +54,7 @@ const ConstantChoice = props => {
             <Instructions>{props.instructions}</Instructions>
             {props.constants.length > 0 ?
             <ButtonContainer>
-                {props.constants.map((p, idx) => <Button key={idx} text={p} active={true} onClick={props.onClick(p)}/>)}
+                {Array.from(new Set(props.constants)).map((p, idx) => <Button key={idx} text={p} active={true} onClick={props.onClick(p)}/>)}
             </ButtonContainer>:
             <ButtonContainer>(No Current Constants)</ButtonContainer>}
             <Button text="New Constant" active={true} onClick={props.onClick(null)}></Button>

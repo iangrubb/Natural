@@ -188,6 +188,36 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
                         newJustification(goalSentence.id, "¬i", [Ids.main], dispatch)
                         dispatch({type: "SET GOAL", newId: Ids.sub})
                         break
+                    case "contradiction":
+                        
+                        const chosenSentence = state.sentences.find( s => s.id === options.chosenId)
+
+                        let oppositeContent
+
+                        if (chosenSentence.content.type === "negation") {
+                            oppositeContent = chosenSentence.content.right
+                        } else {
+                            oppositeContent = {type: "negation", right: chosenSentence.content}
+                        }
+
+                        const foundOpposite = state.sentences.find( s => sentenceEquality(s.content, oppositeContent) && findAbove(goalSentence.id, s.id, state.proofs))
+
+                        let oppositeId
+
+                        if (foundOpposite) {
+                            oppositeId = foundOpposite.id
+                        } else {
+                            oppositeId = newSentence(oppositeContent, goalSentence.id, parentId, dispatch)
+                            dispatch({type: "SET GOAL", newId: oppositeId})
+                        }
+
+                        newJustification(goalSentence.id, "¬e", [chosenSentence.id, oppositeId], dispatch)
+
+                        if (foundOpposite){
+                            setNextGoal(goalSentence.id)
+                        }
+
+                        break
                     case "existential":
 
                         let constant
