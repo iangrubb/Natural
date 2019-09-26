@@ -27,7 +27,7 @@ const Container = styled.div`
 
 const Button = props => {
     return (
-        <Container active={props.active} onClick={props.onClick}>
+        <Container active={props.active} onClick={props.active ? props.onClick : null}>
             {props.text}
         </Container>
     );

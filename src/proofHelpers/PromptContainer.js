@@ -123,10 +123,9 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
                                 return (
                                     <Options
                                         instructions={"Proving a conditional requires proving its consequent after assuming its antecedent."}
-                                        prompts={["confirm", "cancel"]}
+                                        prompts={["ok"]}
                                         actions={[
-                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch, setChoiceRecord)},
-                                            ()=>{dispatch({type: "UNSET FOCUS"})}
+                                            ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch, setChoiceRecord)}
                                     ]}/>
                                 )
                             case "negation":
@@ -141,7 +140,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
                             case "contradiction":
                                 return (
                                     <Options
-                                        instructions={"Derive this by proving some sentence and its negation."}
+                                        instructions={"Derive this by proving some sentence and its negation. (make this a proper rule!!)"}
                                         prompts={["ok"]}
                                         actions={[
                                             ()=>{dispatch({type: "UNSET FOCUS"})}
@@ -164,7 +163,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
                         }
                 }
             } else {
-                return < IntroChoice setChoiceRecord={setChoiceRecord} atom={goalSentence.content.type === "atom"} />
+                return < IntroChoice setChoiceRecord={setChoiceRecord} contradiction={goalSentence.content.type==="contradiction"} atom={goalSentence.content.type === "atom"} />
             }
             
         } else {

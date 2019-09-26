@@ -44,9 +44,9 @@ const IntroChoice = props => {
                 <Button text='Main Rule' active={!props.atom} onClick={()=>props.setChoiceRecord('canon')}/>
             </ButtonContainer>
             <ButtonContainer>
-                <Button text='DNE' active={true} onClick={()=> {props.setChoiceRecord('dne')}}/>
+                <Button text='DNE' active={!props.contradiction} onClick={()=> {props.setChoiceRecord('dne')}}/>
                 <Button text='Reit' active={true} onClick={()=>props.setChoiceRecord('reit')}/>
-                <Button text='Exp' active={true} onClick={()=>props.setChoiceRecord('exp')}/>
+                <Button text='Exp' active={!props.contradiction} onClick={()=>props.setChoiceRecord('exp')}/>
             </ButtonContainer>
         </Container>
     );

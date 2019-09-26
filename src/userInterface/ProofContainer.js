@@ -51,16 +51,27 @@ const Line = styled.h2`
     margin: 1vh 0;
 `
 
-const List = styled.ul`
+const List = styled.div`
     padding: 0;
     margin: 0;
 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
 `
 
-const Rule = styled.li`
+const Rule = styled.div`
     text-align: center;
 
-    margin: 1vh 0;
+    margin: 0.4vh 0.4vw;
+    padding: 1vh 1vw;
+
+    background: #ddd;
+    border-radius: 4px;
+
+
+
 
 `
 

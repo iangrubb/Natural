@@ -62,7 +62,6 @@ const handleJustifications = (state = defaultState.justifications, action) => {
     switch (action.type) {
         case "LOAD JUSTIFICATIONS":
             const test = action.premises.map( (p, idx) => {return {id: idx + 1, type: "Premise", citationIds:[]}})
-            console.log("test", test)
             return test
         case "NEW JUSTIFICATION":
             return [...state, {id: action.id, type: action.ruleType, citationIds: action.citationIds} ]

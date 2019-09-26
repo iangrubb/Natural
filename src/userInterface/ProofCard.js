@@ -50,7 +50,6 @@ const Line = styled.div`
 
 
 const ProofCard = props => {
-    console.log(props)
     return (
         <Container>
             <Proof>

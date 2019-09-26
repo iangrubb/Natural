@@ -66,6 +66,12 @@ const ShowProof = props => {
     console.log(props)
     return (
         <Page>
+            <Interactions>
+                <Goal complete={!props.firstGoal}/>
+                <PromptContainer complete={!props.firstGoal}/>
+                <Message complete={!props.firstGoal}/>
+                <Navigation />
+            </Interactions>
             <Proof>
                 <Column width={60} align={"center"}>
                     {props.lines.map( (id, idx) => <Counter key={id} id={id} order={idx + 1} firstGoalPosition={props.firstGoalPosition}/>)}
@@ -77,12 +83,6 @@ const ShowProof = props => {
                     {props.lines.map( id => <Justification key={id} id={id} settled={props.settled}/>)}
                 </Column>
             </Proof>
-            <Interactions>
-                <Goal complete={!props.firstGoal}/>
-                <PromptContainer complete={!props.firstGoal}/>
-                <Message complete={!props.firstGoal}/>
-                <Navigation />
-            </Interactions>
         </Page>
     );
 }
