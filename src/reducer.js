@@ -12,8 +12,12 @@ const defaultState = {
     proofCounter: null,
     sentenceCounter: null,
     justificationCounter: null,
-    globalConstants: []
+    globalConstants: [],
+    stateRecord: [],
+    stage: 0,
+    maxStage: 0
 }
+
 
 
 const insertBeforeIn = (inserted, before, array) => {
@@ -33,6 +37,8 @@ const handleInitialProofId = (state = defaultState.initialProofId, action) => {
 
 const handleProofs = (state = defaultState.proofs, action) => {
     switch (action.type) {
+        case "ADVANCE PROOFS":
+            return action.value
         case "LOAD PROOFS":
             return [{id: 1, children: action.children}]
         case "ADD ELEMENT":
@@ -47,6 +53,8 @@ const handleProofs = (state = defaultState.proofs, action) => {
 const handleSentences = (state = defaultState.sentences, action) => {
 
     switch (action.type) {
+        case "ADVANCE SENTENCES":
+            return action.value
         case "LOAD SENTENCES":
             return action.sentences
         case "NEW SENTENCE":
@@ -60,6 +68,8 @@ const handleSentences = (state = defaultState.sentences, action) => {
 
 const handleJustifications = (state = defaultState.justifications, action) => {
     switch (action.type) {
+        case "ADVANCE JUSTIFICATIONS":
+            return action.value
         case "LOAD JUSTIFICATIONS":
             const test = action.premises.map( (p, idx) => {return {id: idx + 1, type: "Premise", citationIds:[]}})
             return test
@@ -72,6 +82,8 @@ const handleJustifications = (state = defaultState.justifications, action) => {
 
 const handleCurrentGoal = (state = defaultState.currentGoal, action) => {
     switch (action.type) {
+        case "ADVANCE CURRENT GOAL":
+            return action.value
         case "SET GOAL":
             return action.newId
         case "UNSET GOAL":
@@ -94,6 +106,8 @@ const handleCurrentFocus = (state = defaultState.currentFocus, action) => {
 
 const handleProofCounter = (state = defaultState.proofCounter, action) => {
     switch (action.type) {
+        case "ADVANCE PROOF COUNTER":
+            return action.value
         case "LOAD PROOF COUNTER":
             return 1
         case "INCREMENT PROOF COUNTER":
@@ -105,6 +119,8 @@ const handleProofCounter = (state = defaultState.proofCounter, action) => {
 
 const handleSentenceCounter = (state = defaultState.sentenceCounter, action) => {
     switch (action.type) {
+        case "ADVANCE SENTENCE COUNTER":
+            return action.value
         case "LOAD SENTENCE COUNTER":
             return action.counter
         case "INCREMENT SENTENCE COUNTER":
@@ -116,6 +132,8 @@ const handleSentenceCounter = (state = defaultState.sentenceCounter, action) => 
 
 const handleJustificationCounter = (state = defaultState.justificationCounter, action) => {
     switch (action.type) {
+        case "ADVANCE JUSTIFICATION COUNTER":
+            return action.value
         case "LOAD JUSTIFICATION COUNTER":
             return action.counter
         case "INCREMENT JUSTIFICATION COUNTER":
@@ -127,10 +145,50 @@ const handleJustificationCounter = (state = defaultState.justificationCounter, a
 
 const handleGlobalConstants = (state = defaultState.globalConstants, action) => {
     switch (action.type) {
+        case "ADVANCE GLOBAL CONSTANTS":
+            return action.value
         case "LOAD GLOBAL CONSTANTS":
             return action.constants
         case "ADD CONSTANT":
             return [...state, action.newConstant]
+        default:
+            return state
+    }
+}
+
+const handleStateRecord = (state = defaultState.stateRecord, action) => {
+    switch (action.type) {
+        case "DISCARD STAGES":
+            return state.slice(0, action.finalStage)
+        case "RECORD STATE":
+            return [...state, {
+                proofs: action.proofs,
+                sentences: action.sentences,
+                justifications: action.justifications,
+                currentGoal: action.currentGoal,
+                proofCounter: action.proofCounter,
+                sentenceCounter: action.sentenceCounter,
+                justificationCounter: action.justificationCounter,
+                globalConstants: action.globalConstants,
+            }]
+        default:
+            return state
+    }
+}
+
+const handleStage = (state = defaultState.stage, action) => {
+    switch (action.type) {
+        case "SET STAGE":
+            return action.stage
+        default:
+            return state
+    }
+}
+
+const handleMaxStage = (state = defaultState.maxStage, action) => {
+    switch (action.type) {
+        case "SET MAX STAGE":
+            return action.maxStage
         default:
             return state
     }
@@ -147,7 +205,10 @@ const rootReducer = combineReducers({
     proofCounter: handleProofCounter,
     sentenceCounter: handleSentenceCounter,
     justificationCounter: handleJustificationCounter,
-    globalConstants: handleGlobalConstants
+    globalConstants: handleGlobalConstants,
+    stateRecord: handleStateRecord,
+    stage: handleStage,
+    maxStage: handleMaxStage
 })
 
 export default rootReducer

@@ -9,6 +9,31 @@ const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm
 
 const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRecord) => {
 
+
+    if (state.stage < state.maxStage) {
+        dispatch({type: "DISCARD STAGES", finalStage: state.stage + 1})
+    }
+
+    // Record Old State
+
+    if (state.maxStage === state.stateRecord.length) {
+        dispatch({
+            type: "RECORD STATE",
+            proofs: state.proofs,
+            sentences: state.sentences,
+            justifications: state.justifications,
+            currentGoal: state.currentGoal,
+            proofCounter: state.proofCounter,
+            sentenceCounter: state.sentenceCounter,
+            justificationCounter: state.justificationCounter,
+            globalConstants: state.globalConstants,
+        })
+    }
+
+
+    dispatch({type: "SET STAGE", stage: state.stage + 1})
+    dispatch({type: "SET MAX STAGE", maxStage: state.stage + 1})
+
     // ID Auto-incrementation
 
     const sentenceId = (() => {
@@ -89,9 +114,12 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
     }
 
 
+    
+
 
     // Proof Rule Cases
     const parentId = state.proofs.find( p => p.children.includes(goalSentence.id)).id
+
 
     // Intro Rules
     if (goalSentence.id === focusSentence.id) {
@@ -282,8 +310,6 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
                     dispatch({type: "ADD CONSTANT", newConstant: constant})
                 }
 
-                console.log(constant)
-
                 const instantiation = substitute(constant, focusSentence.content.variable, focusSentence.content.right)
 
                 if (sentenceEquality(instantiation, goalSentence.content)) {
@@ -312,6 +338,8 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
 
     dispatch({type: "UNSET FOCUS"})
     setChoiceRecord(null)
+
+
 }
 
 
