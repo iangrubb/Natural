@@ -12,16 +12,16 @@ import Message from '../proofHelpers/Message'
 import Navigation from '../proofHelpers/Navigation'
 import PromptContainer from '../proofHelpers/PromptContainer'
 
-
-
 const Page = styled.div`
-    width: 100%;
-    height: calc(100% - 50px);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+height: 100%;
+
+display:flex;
+justify-content: center;
+align-items: center;
+
 `
+
 
 const Proof = styled.div`
     height: 90%;

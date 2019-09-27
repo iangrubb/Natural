@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import {withRouter} from 'react-router-dom'
+
 import Button from '../userInterface/Button'
 
 import display from '../helpers/display'
@@ -58,7 +60,7 @@ const ProofCard = props => {
                 {props.premises.map( (p, idx) => <Line key={idx}>{display(p, true)}</Line>)}
                 <Line conclusion={true}>{display(props.conclusion, true)}</Line>
             </Proof>
-            <Button active={true} text="Start Proof" onClick={props.loadProof(props.premises, props.conclusion)}/>
+            <Button active={true} text="Start Proof" onClick={props.loadProof(props.premises, props.conclusion, props.history)}/>
         </Container>
     );
 }
@@ -72,7 +74,7 @@ const msp = () => {
 }
 
 const mdp = dispatch => {
-    return {loadProof: (premises, conclusion)=>()=>{
+    return {loadProof: (premises, conclusion, history)=>()=>{
 
         const modifiedPremises = premises.map( (p, idx) => { return {id: (idx + 1) * 2 , content: p, justificationId: idx + 1} })
         const modifiedConclusion = {id: (premises.length + 1) * 2, content: conclusion}
@@ -104,8 +106,16 @@ const mdp = dispatch => {
         dispatch({type: "LOAD JUSTIFICATION COUNTER", counter: premises.length })
         dispatch({type: "LOAD GLOBAL CONSTANTS", constants: sentences.flatMap( s => extractConstants(s.content) ) })
 
+
+        // Reset state storage.
+        dispatch({type: "DISCARD STAGES", finalStage: 0})
+        dispatch({type: "SET STAGE", stage: 0})
+        dispatch({type: "SET MAX STAGE", maxStage: 0})
+
+        history.push('./proof')
+
     }}
 }
 
-export default connect(msp, mdp)(ProofCard)
+export default withRouter(connect(msp, mdp)(ProofCard))
 

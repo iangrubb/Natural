@@ -1,13 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
-
-
 import styled from 'styled-components'
 
+import { Route, Switch } from 'react-router'
+
 import NavBar from './views/NavBar'
-import ShowProof from './views/ShowProof'
+import ProofPage from './views/ProofPage'
 import Exercises from './views/Exercises'
+import Home from './views/Home'
+import Guide from './views/Guide'
 
 const Site = styled.div`
   width: 100vw;
@@ -24,7 +25,12 @@ const App = props => {
   return (
     <Site>
       < NavBar />
-      {props.initialProofId ? < ShowProof /> : < Exercises />}
+      <Switch>
+        <Route path="/proof" component={ProofPage} />
+        <Route path="/guide" component={Guide} />
+        <Route path="/exercises" component={Exercises} />
+        <Route path="/" component={Home} />
+      </Switch>
     </Site>
   )
 }

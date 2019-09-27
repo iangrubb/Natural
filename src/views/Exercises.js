@@ -4,17 +4,8 @@ import styled from 'styled-components'
 
 import ProofContainer from '../userInterface/ProofContainer'
 
+import { Page } from '../styles'
 
-const Page = styled.div`
-    width: 100%;
-    height: calc(100% - 50px);
-
-    overflow: scroll;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`
 
 const Exercises = props => {
     return (
@@ -142,11 +133,9 @@ const exerciseData = [
 
         {premises: [
             {type: "atom", letter:"A"},
-            {type: "conditional", left: {type: "atom", letter:"A"}, right: {type: "atom", letter:"C"}},
-            {type: "conditional", left: {type: "atom", letter:"A"}, right: {type: "atom", letter:"B"}}
+            {type: "disjunction", left: {type: "conditional", left: {type: "atom", letter:"A"}, right: {type: "atom", letter:"B"}}, right: {type: "conditional", left: {type: "atom", letter:"A"}, right: {type: "atom", letter:"C"}}}  
         ],conclusion:
-        {type: "disjunction", left: {type: "atom", letter:"B"}, right: {type: "atom", letter:"C"}}
-        },
+            {type: "disjunction", left: {type: "atom", letter:"B"}, right: {type: "atom", letter:"C"}}},
 
         {premises: [
             {type: "disjunction", left: {type: "atom", letter:"A"}, right: {type: "disjunction", left: {type: "atom", letter:"B"}, right: {type: "atom", letter:"C"}}}

@@ -207,6 +207,7 @@ const handleSentenceChooser = (state = defaultState.sentenceChooser, action) => 
 }
 
 
+
 const rootReducer = combineReducers({
     initialProofId: handleInitialProofId,
     proofs: handleProofs,

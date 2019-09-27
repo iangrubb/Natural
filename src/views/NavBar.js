@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components'
 
+import { Link } from 'react-router-dom'
+
 
 
 const Container = styled.div`
@@ -25,20 +27,30 @@ const Title = styled.div`
     font-weight: 700;
 `
 
-const Button = styled.div`
+const Button = styled(Link)`
     margin: 0 10px 4px 0;
     font-size: 1.4 em;
     font-weight: 200;
 
     padding: 6px 12px 2px 18px;
 
-    box-shadow: 2px 3px 0 #ccc;
+    box-shadow: 3px 3px 0 #ccc;
     transform: translateY(-3px);
 
-    :active {
+    color: white;
+    text-decoration: none;
+
+    &:active {
         transform: translateY(-1px);
-        box-shadow: 2px 1px 0 #ccc;
+        box-shadow: 2px 2px 0 #ccc;
     }
+
+    &:focus, &:hover, &:visited, &:link, {
+        text-decoration: none;
+    }
+
+
+    
     
 `
 
@@ -46,10 +58,12 @@ const NavBar = () => {
     return (
         <Container>
             <Title>Natural</Title>
-            <Button>Home</Button>
-            <Button>Proof</Button> 
-            <Button>Guide</Button> 
-            <Button>Exercises</Button>
+
+            <Button to="/home">Home</Button>
+            <Button to="/proof">Proof</Button>
+            <Button to="/guide">Guide</Button>
+            <Button to="/exercises">Exercises</Button>
+
         </Container>
     );
 }
