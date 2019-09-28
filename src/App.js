@@ -9,6 +9,7 @@ import ProofPage from './views/ProofPage'
 import Exercises from './views/Exercises'
 import Home from './views/Home'
 import Guide from './views/Guide'
+import NewProof from './views/NewProof'
 
 const Site = styled.div`
   width: 100vw;
@@ -26,6 +27,7 @@ const App = props => {
     <Site>
       < NavBar />
       <Switch>
+        <Route path="/newProof" component={NewProof} />
         <Route path="/proof" component={ProofPage} />
         <Route path="/guide" component={Guide} />
         <Route path="/exercises" component={Exercises} />

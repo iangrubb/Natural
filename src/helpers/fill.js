@@ -5,7 +5,7 @@ import sentenceEquality from '../helpers/sentenceEquality'
 import substitute from '../helpers/substitute'
 import findAbove from '../helpers/findAbove'
 
-const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'y', 'z']
+const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w']
 
 const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRecord) => {
 

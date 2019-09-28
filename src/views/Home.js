@@ -17,9 +17,8 @@ const Home = props => {
         <Page>
             <h1>Testing</h1>
             <Container>
-                <SentenceForm type="propositional"/>
+                <SentenceForm type="predicate" cancel={() => console.log("nevermind")} confirm={result => () => console.log(result)}/>
             </Container>
-            
         </Page>
     );
 }
