@@ -4,11 +4,13 @@ import styled from 'styled-components'
 import {colors, fonts} from '../styles'
 
 const Container = styled.div`
-    width: 90%;
-    height: 36%;
+    width: 84%;
+    height: 32%;
 
-    background: ${colors.mediumSurface};
+    border-radius: 2px;
 
+    background: ${colors.lightSurface};
+    border: 12px solid ${colors.mediumSurface};
     box-shadow: 4px 4px 0 ${colors.darkSurface};
 
     display: flex;
@@ -25,29 +27,13 @@ const Title = styled.div`
 
 `
 
-const Content = styled.div`
-    width: 80%;
-    height: 70%;
-
-    padding: 5%;
-
-    font-size: 1.2em;
-
-    background: ${colors.whiteSurface};
-
-    overflow: scroll;
-`
-
 const Message = props => {
     return (
         <Container>
             {props.complete ? 
             null :
             <>
-            <Title><h3 style={{margin:'4px'}}>Details</h3></Title>
-            <Content>
-                
-            </Content> 
+            <Title><h4 style={{margin:'4px'}}>Details</h4></Title>
             </>
             }
              

@@ -41,6 +41,8 @@ const Button = styled(Link)`
     box-shadow: 3px 3px 0 ${colors.lightText};
     transform: translateY(-3px);
 
+    border-radius:2px;
+
     color: ${colors.lightText};
     text-decoration: none;
 

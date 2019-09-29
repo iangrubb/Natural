@@ -7,7 +7,7 @@ import findAbove from '../helpers/findAbove'
 
 const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w']
 
-const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRecord) => {
+const fill = (state, goalSentence, focusSentence, options, dispatch) => {
 
 
     if (state.stage < state.maxStage) {
@@ -135,10 +135,13 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
                 dispatch({type: "SET GOAL", newId: dnId})
                 break
             case "reit":
-                if (options.copyId) {
-                    newJustification(goalSentence.id, "Reiteration", [options.copyId], dispatch)
+                const foundCopy = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content) && findAbove(goalSentence.id, s.id, state.proofs))
+
+                if (foundCopy) {
+                    newJustification(goalSentence.id, "Reiteration", [foundCopy.id], dispatch)
                     setNextGoal(goalSentence.id)
                 }
+
                 break
             case "exp":
                 const expId = newSentence({type:"contradiction"}, goalSentence.id, parentId, dispatch)
@@ -272,11 +275,15 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
                 }
                 break
             case "conditional":
+
+                const antecedent = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.left) && findAbove(goalSentence.id, s.id, state.proofs))
+
                 const consequent = focusSentence.content.right
+
                 let minorId
                 
-                if (options.antecedent) {
-                    minorId = options.antecedent.id
+                if (antecedent) {
+                    minorId = antecedent.id
                 } else {
                     minorId = newSentence(focusSentence.content.left, goalSentence.id, parentId, dispatch)
                     dispatch({type: "SET GOAL", newId: minorId})
@@ -284,7 +291,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
 
                 if (sentenceEquality(consequent, goalSentence.content)) {
                     newJustification(goalSentence.id, "→e", [minorId, focusSentence.id], dispatch)
-                    if (options.antecedent) {
+                    if (antecedent) {
                         setNextGoal(goalSentence.id)
                     }
                 } else {
@@ -305,13 +312,13 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
                 break
 
             case "negation":
-
-                const unnegatedContent = focusSentence.content.right
+                
+                const unnegated = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.right) && findAbove(goalSentence.id, s.id, state.proofs))
 
                 let unnegatedId
                 
-                if (options.unnegated) {
-                    unnegatedId = options.unnegated.id
+                if (unnegated) {
+                    unnegatedId = unnegated.id
                 } else {
                     unnegatedId = newSentence(focusSentence.content.right, goalSentence.id, parentId, dispatch)
                     dispatch({type: "SET GOAL", newId: unnegatedId})
@@ -319,7 +326,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
 
                 if (sentenceEquality({type: "contradiction"}, goalSentence.content)) {
                     newJustification(goalSentence.id, "¬e", [unnegatedId, focusSentence.id], dispatch)
-                    if (options.unnegated){
+                    if (unnegated){
                         setNextGoal(goalSentence.id)
                     }
                 } else {
@@ -372,11 +379,6 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
 
     dispatch({type: "UNSET FOCUS"})
     
-    if (setChoiceRecord) {
-        setChoiceRecord(null)
-    }
-    
-
 
 }
 

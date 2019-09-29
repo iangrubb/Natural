@@ -2,7 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux'
 
 import styled from 'styled-components'
+
+import Fade from 'react-reveal'
+
+
 import Sentence from './Sentence';
+
+
 
 const Container = styled.div`
 
@@ -10,12 +16,9 @@ const Container = styled.div`
 
     padding: 6px;
 
-    border: 2px solid black;
-    border-radius: 4px;
-
-    overflow: scroll;
-    
+    border-radius: 4px; 
 `
+
 
 const Premises = styled.div`
     display: flex;
@@ -29,6 +32,7 @@ const Else = styled.div`
     border-left: solid black 3px;
     border-top: solid black 3px;
 
+
     display: flex;
     flex-direction: column;
 `
@@ -36,14 +40,18 @@ const Else = styled.div`
 
 const Proof = props => {
     return (
-        <Container depth={props.depth}>
+        <Fade right ><Container depth={props.depth}>
             <Premises>
                 {props.children.slice(0, props.premiseCount).map(id => <Sentence lemmaFlag={props.lemmaFlag} key={id} id={id}/>)}
             </Premises>
             <Else>
-                {props.children.slice(props.premiseCount, props.children.length).map(id => (id % 2 === 0 ? <Sentence lemmaFlag={props.lemmaFlag} key={id} id={id}/>  :  <ProofR lemmaFlag={props.lemmaFlag} key={id} id={id}/>))}
+                {props.children.slice(props.premiseCount, props.children.length).map(id => (id % 2 === 0 ?
+                    <Sentence lemmaFlag={props.lemmaFlag} key={id} id={id}/>
+                    :  
+                    <ProofR lemmaFlag={props.lemmaFlag} key={id} id={id}/>
+                ))}
             </Else>    
-        </Container>
+        </Container></Fade>
     );
 }
 

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+
 import styled from 'styled-components'
+import Fade from 'react-reveal'
 
 import ProofR from '../proofComponents/Proof'
-import Sentence from '../proofComponents/Sentence'
 import Justification from '../proofComponents/Justification'
 import Counter from '../proofComponents/Counter'
 
@@ -33,15 +34,17 @@ const Proof = styled.div`
 
     overflow: scroll;
 
-    height: ${props => props.lemmaFlag ? '68' : '100' }%;
+    height: 94%;
 
-    transition: height 0.5s ease;
+    background: ${colors.lightSurface};
 
-    background: ${colors.whiteSurface};
+    border: 12px solid ${colors.mediumSurface};
 
-    border: 20px solid ${colors.mediumSurface};
+    border-radius: 2px;
 
-    box-shadow: 6px 6px 0 ${colors.darkSurface};
+
+    box-shadow: 4px 4px 0 ${colors.darkSurface};
+    padding: 8px 0;
 
     display: flex;
     justify-content: center;
@@ -60,8 +63,6 @@ const Interactions = styled.div`
 const Column = styled.div`
     min-width: ${props=>props.width}px;
 
-    overflow-y: scroll;
-
 
     padding: 10px 0 0 0;
 
@@ -72,11 +73,21 @@ const Column = styled.div`
 
 const ProofColumn = styled.div`
     height: 90%;
+    width: 480px;
 
     display:flex;
     flex-direction:column;
-    justify-content: space-between;
     align-items: center;
+
+    overflow: hidden;
+`
+
+const FormContainer = styled.div`
+
+
+    
+
+
 `
 
 const ShowProof = props => {
@@ -92,6 +103,8 @@ const ShowProof = props => {
                 <Message complete={!props.firstGoal}/>
                 <Navigation lemmaFlag={lemmaFlag} />
             </Interactions>
+
+
             <ProofColumn>
 
             <Proof lemmaFlag={lemmaFlag} >
@@ -107,10 +120,13 @@ const ShowProof = props => {
             </Proof>
 
 
-            {lemmaFlag ? <SentenceForm type={props.proofType} cancel={() => setLemmaFlag(false)} confirm={result => () => {
+            <Fade bottom collapse when={lemmaFlag} ><FormContainer>
+
+                 <SentenceForm type={props.proofType} cancel={() => setLemmaFlag(false)} confirm={result => () => {
                 props.fill(props.state, props.goalSentence , result)
-                setLemmaFlag(false)
-            }}/> : null }
+                setLemmaFlag(false)}}/>
+
+            </FormContainer></Fade>
 
 
             </ProofColumn>

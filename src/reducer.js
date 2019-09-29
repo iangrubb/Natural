@@ -15,8 +15,7 @@ const defaultState = {
     globalConstants: [],
     stateRecord: [],
     stage: 0,
-    maxStage: 0,
-    sentenceChooser: {sentences:[] , callback:()=>console.log("TEST")}
+    maxStage: 0
 }
 
 
@@ -195,17 +194,6 @@ const handleMaxStage = (state = defaultState.maxStage, action) => {
     }
 }
 
-const handleSentenceChooser = (state = defaultState.sentenceChooser, action) => {
-    switch (action.type) {
-        case "SET SENTENCE CHOOSER":
-            return {sentences: action.sentences , callback: action.callback}
-        case "UNSET SENTENCE CHOOSER":
-            return {sentences:[] , callback:()=>console.log("TEST")}
-        default:
-            return state
-    }
-}
-
 
 
 const rootReducer = combineReducers({
@@ -222,7 +210,6 @@ const rootReducer = combineReducers({
     stateRecord: handleStateRecord,
     stage: handleStage,
     maxStage: handleMaxStage,
-    sentenceChooser: handleSentenceChooser
 })
 
 export default rootReducer

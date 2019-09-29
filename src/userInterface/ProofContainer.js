@@ -1,4 +1,5 @@
 import React from 'react'
+
 import styled from 'styled-components'
 
 import ProofCard from '../userInterface/ProofCard'
@@ -10,7 +11,6 @@ const Category = styled.div`
     max-width: 1000px;
 
     display: flex;
-    justify-content: space-evenly;
 
     background: ${colors.lightSurface};
 
@@ -18,6 +18,8 @@ const Category = styled.div`
 
     padding: 0 0 50px 0;
     margin: 50px 0 0 0;
+
+    border-radius:2px;
 `
 
 const CategoryDetails = styled.div`
@@ -44,6 +46,7 @@ const CategoryDetails = styled.div`
 const ProofList = styled.div`
 
     margin: 20px 10px 0 10px;
+    width: calc(100% - 240px);
 
     display: flex;
     flex-wrap: wrap;

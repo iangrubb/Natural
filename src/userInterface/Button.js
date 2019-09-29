@@ -8,6 +8,8 @@ const Container = styled.div`
     margin: 6px 4px 2px 4px;
     padding: 8px;
 
+    border-radius: 2px;
+
     box-shadow: ${props => props.active ? `3px 3px 0 ${colors.highlightText}` : 'none'};
 
     background: ${props => props.active ? colors.darkSurface : '#aaa'};

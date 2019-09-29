@@ -4,12 +4,16 @@ export const colors = {
 
     darkText: '#120F14',
     lightText: '#EBEAEF',
-    highlightText: '#F7F379',
+    highlightText: '#ECF280',
 
     darkSurface: '#1F1823',
-    mediumSurface: '#A09BA5',
-    lightSurface: '#C8C7C9',
-    whiteSurface: '#EDEAEF',
+    mediumSurface: '#A49FAD',
+    lightSurface: '#F9F7FC',
+
+    focusOutline: '#CECB02',
+
+    availableBackground: '#A2D3AC',
+    currentGoalBackground: '#F3FF9B',
 
 
     

@@ -10,10 +10,13 @@ import display from '../helpers/display'
 import {colors, fonts} from '../styles'
 
 const Container = styled.div`
-    width: 90%;
-    height: 16%;
+    width: 84%;
+    height: 14%;
 
-    background: ${colors.mediumSurface};
+    border-radius: 2px;
+
+    background: ${colors.lightSurface};
+    border: 12px solid ${colors.mediumSurface};
 
     box-shadow: 4px 4px 0 ${colors.darkSurface};
 
@@ -31,7 +34,7 @@ const TextContainer = styled.div`
     justify-content: center;
     align-items: center;
     
-    background: ${colors.whiteSurface};
+    background: ${colors.lightSurface};
 `
 
 const Goal = props => {

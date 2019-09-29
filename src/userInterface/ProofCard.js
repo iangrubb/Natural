@@ -22,6 +22,8 @@ const Container = styled.div`
 
     box-shadow: 6px 6px 0 ${colors.darkSurface};
 
+    border-radius:2px;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -33,7 +33,7 @@ const Instructions = styled.div`
     font-size: 1em;
     font-weight: 400;
 
-    background: ${colors.whiteSurface};
+    background: ${colors.lightSurface};
 `
 
 const IntroChoice = props => {

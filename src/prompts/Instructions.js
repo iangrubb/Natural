@@ -19,7 +19,7 @@ const Container = styled.div`
     font-size: 1em;
     font-weight: 700;
 
-    background: ${colors.whiteSurface};
+    background: ${colors.lightSurface};
 
 
 `

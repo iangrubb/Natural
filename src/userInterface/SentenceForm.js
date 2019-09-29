@@ -28,12 +28,13 @@ const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm
 
 const Container = styled.div`
 
-    width: 80%;
+    width: 100%;
 
     background: ${colors.mediumSurface};
 
-    box-shadow: 6px 6px 0 ${colors.darkSurface};
-
+    box-shadow: -8px -8px 0 ${colors.darkSurface};
+    width: 400px
+    margin: 40px 0 0 0;
     padding: 20px;
 
 `
@@ -45,7 +46,7 @@ const Window = styled.div`
 
     margin: 8px 0;
 
-    background: ${colors.whiteSurface};
+    background: ${colors.lightSurface};
 
     display: flex;
     justify-content: center;
