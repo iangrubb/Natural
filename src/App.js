@@ -37,10 +37,5 @@ const App = props => {
   )
 }
 
-const msp = () => {
-  return state => {
-      return {initialProofId: state.initialProofId}
-  }
-}
 
-export default connect(msp)(App)
+export default App

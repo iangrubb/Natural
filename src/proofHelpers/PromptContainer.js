@@ -12,14 +12,15 @@ import fill from '../helpers/fill'
 import findAbove from '../helpers/findAbove'
 import sentenceEquality from '../helpers/sentenceEquality'
 
+import {colors, fonts} from '../styles'
+
 const Container = styled.div`
     width: 90%;
     height: 30%;
 
-    background: #ccc;
+    background: ${colors.mediumSurface};
 
-    border-radius: 4px;
-    box-shadow: 2px 2px 4px #999;
+    box-shadow: 4px 4px 0 ${colors.darkSurface};
 
     display: flex;
     flex-direction: column;
@@ -38,14 +39,25 @@ const Content = styled.div`
 
 
 
-const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord, setChoiceRecord) => {
+const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord, setChoiceRecord, lemmaFlag, setLemmaFlag) => {
     
     if (!state.sentences.find(s=> !s.jusificationId)) {
         return null
     } else if (!goalSentence) {
         return <Instructions text="Select a goal sentence you want to work towards proving"/>
+    } else if (lemmaFlag) {
+        return <Instructions text="Input a lemma that you can prove and that would help you reach the goal."/>
     } else if (!focusSentence) {
-        return <Instructions text= "Select a sentence to use its logic to achieve the current goal"/>
+        return (
+            <Options
+                instructions={"Either select a sentence to use its logic to achieve the current goal or add a lemma to the proof."}
+                prompts={["lemma"]}
+                actions={[
+                    ()=>{
+                        setLemmaFlag(true)
+                    },
+            ]}/>
+        )
     } else {
         if (goalSentence.id === focusSentence.id) {
             // Intro Rules
@@ -283,6 +295,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, choiceRecord
 
 const PromptContainer = props => {
 
+
     const [choiceRecord, setChoiceRecord] = useState(null)
 
     return (
@@ -292,7 +305,7 @@ const PromptContainer = props => {
             <>
             <h3 style={{margin:'4px'}}>Instructions</h3>
             <Content>
-                {props.choosePrompt(props.state, props.goalSentence, props.focusSentence, choiceRecord, setChoiceRecord)}
+                {props.choosePrompt(props.state, props.goalSentence, props.focusSentence, choiceRecord, setChoiceRecord, props.lemmaFlag, props.setLemmaFlag)}
             </Content>
             </>
             }
@@ -309,7 +322,7 @@ const msp = () => {
 
 const mdp = dispatch => {
     return {
-        choosePrompt: (state, goal, focus, choiceRecord, setChoiceRecord) => choosePrompt(state, goal, focus, dispatch, choiceRecord, setChoiceRecord)
+        choosePrompt: (state, goal, focus, choiceRecord, setChoiceRecord, lemmaFlag, setLemmaFlag) => choosePrompt(state, goal, focus, dispatch, choiceRecord, setChoiceRecord, lemmaFlag, setLemmaFlag)
     }
 }
 

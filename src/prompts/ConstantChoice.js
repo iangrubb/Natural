@@ -3,6 +3,8 @@ import React from 'react'
 import styled from 'styled-components'
 import Button from '../userInterface/Button'
 
+import {colors, fonts} from '../styles'
+
 const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -42,9 +44,7 @@ const Instructions = styled.div`
     font-size: 1em;
     font-weight: 400;
 
-    background: #ddd;
-    border: 2px solid #aaa;
-    border-radius: 4px;
+    background: ${colors.whiteSurface};
 `
 
 

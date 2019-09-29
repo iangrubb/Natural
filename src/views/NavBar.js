@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import { Link } from 'react-router-dom'
 
+import { colors } from '../styles'
+
 
 
 const Container = styled.div`
@@ -12,10 +14,12 @@ const Container = styled.div`
     top: 0;
     left: 0;
     
-    background: #1F1823;
-    color: #ccc;
+    background: ${colors.darkSurface};
+    color: ${colors.lightText};
 
-    box-shadow: 2px 0 8px #333;
+    box-shadow: 2px 0 8px ${colors.darkSurface};
+
+    z-index: 2;
 
     display: flex;
     align-items: baseline;
@@ -29,20 +33,20 @@ const Title = styled.div`
 
 const Button = styled(Link)`
     margin: 0 10px 4px 0;
-    font-size: 1.4 em;
+    font-size: 1.6 em;
     font-weight: 200;
 
     padding: 6px 12px 2px 18px;
 
-    box-shadow: 3px 3px 0 #ccc;
+    box-shadow: 3px 3px 0 ${colors.lightText};
     transform: translateY(-3px);
 
-    color: white;
+    color: ${colors.lightText};
     text-decoration: none;
 
     &:active {
         transform: translateY(-1px);
-        box-shadow: 2px 2px 0 #ccc;
+        box-shadow: 3px 2px 0 ${colors.lightText};
     }
 
     &:focus, &:hover, &:visited, &:link, {

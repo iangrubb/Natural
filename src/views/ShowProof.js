@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -12,26 +12,36 @@ import Message from '../proofHelpers/Message'
 import Navigation from '../proofHelpers/Navigation'
 import PromptContainer from '../proofHelpers/PromptContainer'
 
+import SentenceForm from '../userInterface/SentenceForm'
+
+import fill from '../helpers/fill'
+
+import { colors } from '../styles'
+
 const Page = styled.div`
 
-height: 100%;
+    height: 100%;
 
-display:flex;
-justify-content: center;
-align-items: center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 
 `
 
 
 const Proof = styled.div`
-    height: 90%;
 
     overflow: scroll;
 
-    background: #ccc;
+    height: ${props => props.lemmaFlag ? '68' : '100' }%;
 
-    border-radius: 4px;
-    box-shadow: 2px 2px 4px #999;
+    transition: height 0.5s ease;
+
+    background: ${colors.whiteSurface};
+
+    border: 20px solid ${colors.mediumSurface};
+
+    box-shadow: 6px 6px 0 ${colors.darkSurface};
 
     display: flex;
     justify-content: center;
@@ -39,8 +49,7 @@ const Proof = styled.div`
 
 const Interactions = styled.div`
     height: 90%;
-    width: 30%;
-    max-width: 300px;
+    width: 280px;
 
     display: flex;
     flex-direction: column;
@@ -51,9 +60,8 @@ const Interactions = styled.div`
 const Column = styled.div`
     min-width: ${props=>props.width}px;
 
-    overflow: scroll;
+    overflow-y: scroll;
 
-    background: #ccc;
 
     padding: 10px 0 0 0;
 
@@ -62,27 +70,51 @@ const Column = styled.div`
     align-items: ${props => props.align};
 `
 
+const ProofColumn = styled.div`
+    height: 90%;
+
+    display:flex;
+    flex-direction:column;
+    justify-content: space-between;
+    align-items: center;
+`
+
 const ShowProof = props => {
-    console.log(props)
+    
+    const [lemmaFlag, setLemmaFlag] = useState(false)
+
+
     return (
         <Page>
             <Interactions>
-                <Goal complete={!props.firstGoal}/>
-                <PromptContainer complete={!props.firstGoal}/>
+                <Goal complete={!props.firstGoal} lemmaFlag={lemmaFlag}/>
+                <PromptContainer complete={!props.firstGoal} lemmaFlag={lemmaFlag} setLemmaFlag={setLemmaFlag} />
                 <Message complete={!props.firstGoal}/>
-                <Navigation />
+                <Navigation lemmaFlag={lemmaFlag} />
             </Interactions>
-            <Proof>
+            <ProofColumn>
+
+            <Proof lemmaFlag={lemmaFlag} >
                 <Column width={60} align={"center"}>
                     {props.lines.map( (id, idx) => <Counter key={id} id={id} order={idx + 1} firstGoalPosition={props.firstGoalPosition}/>)}
                 </Column>
                 <Column width={240} align={"flex-start"}>
-                    <ProofR key={props.initialProofId} id={props.initialProofId} />
+                    <ProofR key={1} id={1} lemmaFlag={lemmaFlag}/>
                 </Column>
                 <Column width={140} align={"center"}>
                     {props.lines.map( id => <Justification key={id} id={id} settled={props.settled}/>)}
                 </Column>
             </Proof>
+
+
+            {lemmaFlag ? <SentenceForm type={props.proofType} cancel={() => setLemmaFlag(false)} confirm={result => () => {
+                props.fill(props.state, props.goalSentence , result)
+                setLemmaFlag(false)
+            }}/> : null }
+
+
+            </ProofColumn>
+            
         </Page>
     );
 }
@@ -90,7 +122,7 @@ const ShowProof = props => {
 
 const msp = () => {
     return state => {
-        const initialProof = state.proofs.find(p => p.id === state.initialProofId)
+        const initialProof = state.proofs.find(p => p.id === 1)
 
         const extract = children => {
             return children.flatMap( id => (id%2===0) ? [id] : extract(state.proofs.find(p=> p.id === id).children))
@@ -102,9 +134,22 @@ const msp = () => {
         const firstGoalPosition = lines.findIndex(l=>l===firstGoal)
 
 
-        return {...state, lines: lines.flat(Infinity), initialProof: initialProof, firstGoal: firstGoal, firstGoalPosition: firstGoalPosition, settled: lines.slice(0, firstGoalPosition)}
+        return {...state,
+            state: state,
+            lines: lines.flat(Infinity),
+            firstGoal: firstGoal,
+            firstGoalPosition: firstGoalPosition,
+            goalSentence: state.sentences.find( s => s.id === state.currentGoal),
+            settled: lines.slice(0, firstGoalPosition)
+        }
     }
 }
 
-export default connect(msp)(ShowProof)
+const mdp = dispatch => {
+    return {
+        fill: (state, goalSentence, result) => fill(state, goalSentence, null, {lemma: result}, dispatch , null)
+    }
+}
+
+export default connect(msp, mdp)(ShowProof)
 

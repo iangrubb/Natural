@@ -4,9 +4,14 @@ import styled from 'styled-components'
 
 import { Page } from '../styles'
 
+import SentenceForm from '../userInterface/SentenceForm'
+
 const NewProof = () => {
     return (
         <Page>
+            
+            <SentenceForm type="predicate" cancel={() => console.log("nevermind")} confirm={result => () => console.log(result)}/>
+           
             
         </Page>
     )

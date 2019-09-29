@@ -120,10 +120,14 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
     // Proof Rule Cases
     const parentId = state.proofs.find( p => p.children.includes(goalSentence.id)).id
 
+    if (options.lemma) {
 
-    // Intro Rules
-    if (goalSentence.id === focusSentence.id) {
-        
+        const lemma = newSentence(options.lemma, goalSentence.id, parentId, dispatch)
+        dispatch({type: "SET GOAL", newId: lemma})
+
+    
+    } else if (goalSentence.id === focusSentence.id) {
+        // Intro Rules
         switch(options.rule) {
             case "dne":
                 const dnId = newSentence({type:"negation", right:{type:"negation", right: focusSentence.content}}, goalSentence.id, parentId, dispatch)
@@ -254,8 +258,8 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
                 }
         }
 
-    // Elim Rules
     } else {
+        // Elim Rules
         switch(focusSentence.content.type) {
             case "conjunction":
                 const derived = focusSentence.content[options.side]
@@ -367,7 +371,11 @@ const fill = (state, goalSentence, focusSentence, options, dispatch, setChoiceRe
     }
 
     dispatch({type: "UNSET FOCUS"})
-    setChoiceRecord(null)
+    
+    if (setChoiceRecord) {
+        setChoiceRecord(null)
+    }
+    
 
 
 }

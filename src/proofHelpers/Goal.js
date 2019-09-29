@@ -7,14 +7,15 @@ import Button from '../userInterface/Button'
 
 import display from '../helpers/display'
 
+import {colors, fonts} from '../styles'
+
 const Container = styled.div`
     width: 90%;
     height: 16%;
 
-    background: #ccc;
+    background: ${colors.mediumSurface};
 
-    border-radius: 4px;
-    box-shadow: 2px 2px 4px #999;
+    box-shadow: 4px 4px 0 ${colors.darkSurface};
 
     display: flex;
     flex-direction: column;
@@ -23,16 +24,14 @@ const Container = styled.div`
 `
 const TextContainer = styled.div`
     width:90%;
-    height: 30px;
+    height: 40px;
     margin: 4px 0;
 
     display: flex;
     justify-content: center;
     align-items: center;
     
-    background: #ddd;
-    border: 2px solid #aaa;
-    border-radius: 4px;
+    background: ${colors.whiteSurface};
 `
 
 const Goal = props => {
@@ -41,9 +40,9 @@ const Goal = props => {
             {props.complete ?
             <h1 style={{textAlign:'center'}}>Proof Complete!</h1> :
             <>
-                <h3 style={{margin:'4px'}}>Current Goal</h3>
+                <h4 style={{margin:'4px'}}>Current Goal</h4>
                 <TextContainer><div style={{display: 'flex', alignItems:'flex-end'}}>{props.goalSentence}</div></TextContainer>
-                <Button text={'change'} active={props.currentGoal && !props.currentFocus} onClick={props.onClick(props.currentGoal && !props.currentFocus)}/>
+                <Button text={'change'} active={props.currentGoal && !props.currentFocus && !props.lemmaFlag} onClick={props.onClick(props.currentGoal && !props.currentFocus)}/>
             </>}
         </Container>
     );

@@ -8,18 +8,19 @@ import Button from '../userInterface/Button'
 
 import display from '../helpers/display'
 
+import { colors, fonts } from '../styles'
+
 const Container = styled.div`
 
-    width: 240px;
+    width: 180px;
     height: 160px;
 
     margin: 2%;
     padding: 10px;
 
-    background: #ccc;
+    background: ${colors.mediumSurface};
 
-    border-radius: 4px;
-    box-shadow: 2px 2px 4px #999;
+    box-shadow: 6px 6px 0 ${colors.darkSurface};
 
     display: flex;
     flex-direction: column;
@@ -29,14 +30,15 @@ const Container = styled.div`
 `
 
 const Proof = styled.div`
-    width: 96%;
-    height: 76%;
+    width: 98%;
+    height: 72%;
+
+    font-family:${fonts.text};
+    font-size: 0.9em;
 
     overflow: scroll;
 
-    background: #ddd;
-    border: 2px solid #aaa;
-    border-radius: 4px;
+    background: ${colors.lightSurface};
 
     display: flex;
     flex-direction: column;
@@ -46,8 +48,8 @@ const Proof = styled.div`
 
 const Line = styled.div`
     padding: 4px 0;
-    width: 80%;
-    border-top: ${props => props.conclusion ? '2px solid black' : 'none'};
+    width: 92%;
+    border-top: ${props => props.conclusion ? `2px solid ${colors.darkText}` : 'none'};
     display: flex;
     align-items: flex-end;
 `
@@ -60,7 +62,7 @@ const ProofCard = props => {
                 {props.premises.map( (p, idx) => <Line key={idx}>{display(p, true)}</Line>)}
                 <Line conclusion={true}>{display(props.conclusion, true)}</Line>
             </Proof>
-            <Button active={true} text="Start Proof" onClick={props.loadProof(props.premises, props.conclusion, props.history)}/>
+            <Button active={true} text="Start Proof" onClick={props.loadProof(props.premises, props.conclusion, props.history, props.type)}/>
         </Container>
     );
 }
@@ -74,7 +76,7 @@ const msp = () => {
 }
 
 const mdp = dispatch => {
-    return {loadProof: (premises, conclusion, history)=>()=>{
+    return {loadProof: (premises, conclusion, history, type)=>()=>{
 
         const modifiedPremises = premises.map( (p, idx) => { return {id: (idx + 1) * 2 , content: p, justificationId: idx + 1} })
         const modifiedConclusion = {id: (premises.length + 1) * 2, content: conclusion}
@@ -95,7 +97,7 @@ const mdp = dispatch => {
             }
         }
 
-        dispatch({type: "LOAD PROOF ID"})
+        dispatch({type: "LOAD PROOF TYPE", proofType: type})
         dispatch({type: "LOAD PROOFS", children: sentences.map((s, idx) => (idx + 1) * 2)})
         dispatch({type: "LOAD SENTENCES", sentences: sentences})
         dispatch({type: "LOAD JUSTIFICATIONS", premises: premises })

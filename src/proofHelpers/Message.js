@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from 'styled-components'
 
+import {colors, fonts} from '../styles'
+
 const Container = styled.div`
     width: 90%;
     height: 36%;
 
-    background: #ccc;
+    background: ${colors.mediumSurface};
 
-    border-radius: 4px;
-    box-shadow: 2px 2px 4px #999;
+    box-shadow: 4px 4px 0 ${colors.darkSurface};
 
     display: flex;
     flex-direction: column;
@@ -32,9 +33,7 @@ const Content = styled.div`
 
     font-size: 1.2em;
 
-    background: #ddd;
-    border: 2px solid #aaa;
-    border-radius: 4px;
+    background: ${colors.whiteSurface};
 
     overflow: scroll;
 `

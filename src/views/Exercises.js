@@ -10,7 +10,7 @@ import { Page } from '../styles'
 const Exercises = props => {
     return (
         <Page>
-            {exerciseData.map( (e, idx) => <ProofContainer key={idx} {...e} />)}
+            {exerciseData.map( (e, idx) => <ProofContainer key={idx} {...e} type={e.type}/>)}
         </Page>
     );
 }
@@ -19,6 +19,7 @@ const Exercises = props => {
 
 const exerciseData = [
     {logic: "Propositional",
+    type: "propositional",
     name: "Direct Proofs",
     rules: [
         '& Introduction',
@@ -65,6 +66,7 @@ const exerciseData = [
     ]},
 
     {logic: "Propositional",
+    type: "propositional",
     name: "Conditional Proofs",
     rules: [
         '& Introduction',
@@ -108,6 +110,7 @@ const exerciseData = [
     ]},
 
     {logic: "Propositional",
+    type: "propositional",
     name: "Proofs by Cases",
     rules: [
         '& Introduction',
@@ -153,6 +156,7 @@ const exerciseData = [
     ]},
 
     {logic: "Propositional",
+    type: "propositional",
     name: "Proofs by Contradiction",
     rules: [
         '& Introduction',
@@ -195,6 +199,7 @@ const exerciseData = [
     ]},
 
     {logic: "Propositional",
+    type: "propositional",
     name: "Challenge Proofs",
     rules: [
         '& Introduction',
@@ -241,6 +246,7 @@ const exerciseData = [
     ]},
 
     {logic: "Predicate",
+    type: "predicate",
     name: "Direct Proofs",
     rules: [
         '& Introduction',
@@ -287,6 +293,7 @@ const exerciseData = [
     ]},
 
     {logic: "Predicate",
+    type: "predicate",
     name: "Universal Proofs",
     rules: [
         '& Introduction',
@@ -331,6 +338,7 @@ const exerciseData = [
     ]},
 
     {logic: "Predicate",
+    type: "predicate",
     name: "Existential Proofs",
     rules: [
         '& Introduction',
@@ -384,6 +392,7 @@ const exerciseData = [
     ]},
 
     {logic: "Predicate",
+    type: "predicate",
     name: "Challenge Proofs",
     rules: [
         '& Introduction',
@@ -427,6 +436,7 @@ const exerciseData = [
     ]},
 
     {logic: "Relational",
+    type: "predicate",
     name: "Direct Proofs",
     rules: [
         '& Introduction',
@@ -457,6 +467,7 @@ const exerciseData = [
     ]},
 
     {logic: "Relational",
+    type: "predicate",
     name: "Challenge Proofs",
     rules: [
         '& Introduction',

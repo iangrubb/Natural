@@ -5,14 +5,15 @@ import styled from 'styled-components'
 
 import Button from '../userInterface/Button'
 
+import {colors, fonts} from '../styles'
+
 const Container = styled.div`
     width: 90%;
     height: 12%;
 
-    background: #ccc;
+    background: ${colors.mediumSurface};
 
-    border-radius: 4px;
-    box-shadow: 2px 2px 4px #999;
+    box-shadow: 4px 4px 0 ${colors.darkSurface};
 
     display: flex;
     flex-direction: column;
@@ -31,8 +32,8 @@ const Navigation = props => {
         <Container>
             <h3 style={{margin:'4px'}}>Navigate</h3>
             <Buttons>
-                <Button text={"back"} active={props.back} onClick={props.advance(props.state, props.stateRecord, props.stage - 1, true)}/>
-                <Button text={"forward"} active={props.forward} onClick={props.advance(props.state, props.stateRecord, props.stage + 1, false)}/>
+                <Button text={"back"} active={props.back && !props.lemmaFlag && props.currentGoal} onClick={props.advance(props.state, props.stateRecord, props.stage - 1, true)}/>
+                <Button text={"forward"} active={props.forward && !props.lemmaFlag && props.currentGoal} onClick={props.advance(props.state, props.stateRecord, props.stage + 1, false)}/>
             </Buttons>
         </Container>
     );

@@ -3,7 +3,7 @@ import { combineReducers } from 'redux'
 
 
 const defaultState = {
-    initialProofId: null,
+    proofType: null,
     proofs: [],
     sentences: [],
     justifications: [],
@@ -27,10 +27,10 @@ const insertBeforeIn = (inserted, before, array) => {
 }
 
 
-const handleInitialProofId = (state = defaultState.initialProofId, action) => {
+const handleProofType = (state = defaultState.proofType, action) => {
     switch (action.type) {
-        case "LOAD PROOF ID":
-            return 1
+        case "LOAD PROOF TYPE":
+            return action.proofType
         default:
             return state
     }
@@ -209,7 +209,7 @@ const handleSentenceChooser = (state = defaultState.sentenceChooser, action) => 
 
 
 const rootReducer = combineReducers({
-    initialProofId: handleInitialProofId,
+    proofType: handleProofType,
     proofs: handleProofs,
     sentences: handleSentences,
     justifications: handleJustifications,

@@ -4,6 +4,8 @@ import styled from 'styled-components'
 
 import Button from './Button'
 
+import {colors, fonts} from '../styles'
+
 
 
 const variableDisplay = number => {
@@ -25,12 +27,15 @@ const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm
 
 
 const Container = styled.div`
-    background: white;
-    border-radius: 4px;
+
+    width: 80%;
+
+    background: ${colors.mediumSurface};
+
+    box-shadow: 6px 6px 0 ${colors.darkSurface};
 
     padding: 20px;
 
-    width: 360px;
 `
 
 const Window = styled.div`
@@ -38,11 +43,9 @@ const Window = styled.div`
     overflow: scroll;
     height: 40px;
 
-    margin: 12px 0;
-    border: solid 2px #aaa;
-    border-radius: 20px;
+    margin: 8px 0;
 
-    background: #ddd;
+    background: ${colors.whiteSurface};
 
     display: flex;
     justify-content: center;
@@ -79,14 +82,17 @@ const Gap = styled.div`
     justify-content: center;
     align-items: center;
 
-    background: #aaa;
+    background: ${colors.mediumSurface};
     border-radius: 2px;
 
-    border: ${props=> props.active ? "dashed 2px #333" : "none"}
+    border: ${props=> props.active ? `dashed 2px ${colors.darkSurface}` : "none"}
 
 `
 
 const Part = styled.div`
+
+    font-family: ${fonts.text};
+
     display: flex;
     align-items: center;
 
@@ -154,8 +160,6 @@ const SentenceForm = props => {
 
 
     const collectVariables = (target, collection) => {
-
-        console.log("targ", target, collection)
 
         let newCollection
         if (target.type === "universal" || target.type === "existential" ) {
@@ -302,7 +306,6 @@ const SentenceForm = props => {
                 {display(sentences.find(s=>s.id === 1), true)}
             </Window>
 
-
             <ButtonRow>
                 <Label>Connectives:</Label>
                 <Button active={true} text="&" onClick={update("conjunction")} />
@@ -317,14 +320,13 @@ const SentenceForm = props => {
             <ButtonRow>
                 <Label>Variables in scope:</Label>
                 {activeVariables && activeVariables.length > 0 ? activeVariables.map( v => <Button active={sentences.find(s=>s.id===focus).type === "atom"     } text={variableDisplay(v)} onClick={()=>handleInput(v)} />) : "(none)"}
-                
             </ButtonRow>
             : null}
 
             <ButtonRow>
                 <Button active={!sentences.find( s => s.type === "gap" || (s.terms && s.terms.length === 0))} text="Confirm" onClick={props.confirm(totalResult)}/>
                 <Button active={true} text="Clear" onClick={clear}/>
-                <Button active={true} text="Cancel" oncClick={props.cancel}/>
+                <Button active={true} text="Cancel" onClick={props.cancel}/>
             </ButtonRow>
 
         </Container>

@@ -9,7 +9,7 @@ import { Page } from '../styles'
 const ProofPage = props => {
     return (
         <Page>
-            {props.initialProofId ? < ShowProof /> : null}
+            {props.proofType ? < ShowProof /> : null}
         </Page>
     );
 }

@@ -8,12 +8,12 @@ import findAbove from '../helpers/findAbove'
 
 
 const Container = styled.div`
-    height: 40px;
+    height: 28px;
     width: fit-content;
-    border-radius: 10px;
+    border-radius: 4px;
 
-    margin: ${props => props.isGoal?'75px':'5px'} 40px 10px 10px;
-    padding: 0 5px;
+    margin: ${props => props.isGoal?'75px':'5px'} 40px 5px 5px;
+    padding: 4px 8px;
 
     background: ${props => props.active ? '#aaa' : 'none'};
     border: ${props => props.active ? '1px solid #333' : 'none'};
@@ -39,10 +39,12 @@ const Sentence = props => {
 
 
 
-const active = (sentence, goal, focus, proofs, sentenceChooser) => {
+const active = (sentence, goal, focus, proofs, sentenceChooser, lemmaFlag) => {
     if (!goal) {
         // No goal set
         return !sentence.justificationId
+    } else if (lemmaFlag) {
+        return false
     } else if (!focus) {
         // No focus set
         return (sentence.id === goal.id) || (sentence.content.type !== "atom" && findAbove(goal.id, sentence.id, proofs))
@@ -63,7 +65,7 @@ const msp = () => {
             sentence: sentence,
             globalGoal: goal,
             focus: focus,
-            active: active(sentence, goal, focus, state.proofs, state.sentenceChooser)
+            active: active(sentence, goal, focus, state.proofs, state.sentenceChooser, ownProps.lemmaFlag)
         }
     }
 }

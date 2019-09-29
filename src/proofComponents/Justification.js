@@ -5,13 +5,15 @@ import styled from 'styled-components'
 
 const Container = styled.div`
     height: 40px;
-    border-radius: 10px;
+    
 
     margin: ${props => props.goal?'75px':'5px'} 0 10px 0;
     padding: 0 10px;
 
     border: ${props => props.currentGoal ? '2px solid #555' : 'none'};
-    background: ${props => props.currentGoal ? '#eee' : 'none'};
+    background: ${props => props.currentGoal ? 'yellow' : 'none'};
+
+    border-radius: 2px;
 
     font-weight: 700;
 
@@ -23,7 +25,7 @@ const Container = styled.div`
 const Justification = props => {
     return (
         <Container goal={props.goal} currentGoal={props.currentGoal}>
-            {props.justification ? props.justification.type : "< Goal >"}{props.citations.map(c => `, ${c}`)}
+            {props.justification ? props.justification.type : "GOAL"}{props.citations.map(c => `, ${c}`)}
         </Container>
     );
 }

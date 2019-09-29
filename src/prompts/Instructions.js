@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components'
 
+import {colors, fonts} from '../styles'
+
 const Container = styled.div`
 
     padding: 5%;
@@ -17,9 +19,7 @@ const Container = styled.div`
     font-size: 1em;
     font-weight: 700;
 
-    background: #ddd;
-    border: 2px solid #aaa;
-    border-radius: 4px;
+    background: ${colors.whiteSurface};
 
 
 `

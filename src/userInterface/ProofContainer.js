@@ -3,61 +3,69 @@ import styled from 'styled-components'
 
 import ProofCard from '../userInterface/ProofCard'
 
+import { colors, fonts } from '../styles'
+
 const Category = styled.div`
     width: 90%;
-    max-width: 1200px;
+    max-width: 1000px;
 
     display: flex;
     justify-content: space-evenly;
 
-    background: #eee;
-    border: 2px solid #aaa;
+    background: ${colors.lightSurface};
 
-    border-radius: 2vw;
-    padding: 1vh 0;
-    margin: 5vh 0;
+    box-shadow: -10px -10px 0 ${colors.darkSurface};
+
+    padding: 0 0 50px 0;
+    margin: 50px 0 0 0;
 `
 
 const CategoryDetails = styled.div`
-    width: 32%;
+    width: 180px;
     height: fit-content;
 
     min-width: 180px;
 
-    padding: 2vh 2vw;
+    padding: 10px;
+    margin: 30px 0 0 10px;
+
+    color: ${colors.darkText};
 
     display: flex;
     flex-direction: column;
     align-items: center;
 
+    box-shadow: 6px 6px 0 ${colors.darkSurface};
 
-    border-radius: 4px;
+
 
 `
 
 const ProofList = styled.div`
-    width: 64%;
+
+    margin: 20px 10px 0 10px;
 
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-content: flex-start;
 `
 
 const Line = styled.h2`
     text-align: center;
 
     font-size: ${props => props.size}vh;
+    
 
     margin: 1vh 0;
 `
 
 const List = styled.div`
-    padding: 0;
-    margin: 0;
 
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+
 
 `
 
@@ -65,10 +73,12 @@ const Rule = styled.div`
     text-align: center;
 
     margin: 0.4vh 0.4vw;
-    padding: 1vh 1vw;
+    padding: 0.4vh 0.4vw;
 
-    background: #ddd;
-    border-radius: 4px;
+
+
+    font-family: ${fonts.text};
+
 
 
 
@@ -87,7 +97,7 @@ const ProofContainer = props => {
                 </List>
             </CategoryDetails>
             <ProofList>
-                {props.proofs.map( (p, idx) => <ProofCard key={idx} {...p}/>)}
+                {props.proofs.map( (p, idx) => <ProofCard key={idx} {...p} type={props.type}/>)}
             </ProofList>
         </Category>
     );
