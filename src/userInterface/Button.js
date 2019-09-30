@@ -5,8 +5,10 @@ import { colors } from '../styles'
 
 const Container = styled.div`
 
-    margin: 6px 4px 2px 4px;
-    padding: 8px;
+    margin: 6px 4px;
+    padding: ${props => props.minor ? '4px' : '6px'};
+
+    font-size: ${props => props.minor ? '0.8em' : '1em'}
 
     border-radius: 2px;
 
@@ -29,7 +31,7 @@ const Container = styled.div`
 
 const Button = props => {
     return (
-        <Container active={props.active} onClick={props.active ? props.onClick : null}>
+        <Container minor={props.minor} active={props.active} onClick={props.active ? props.onClick : null}>
             {props.text}
         </Container>
     );

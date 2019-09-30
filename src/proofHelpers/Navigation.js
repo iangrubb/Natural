@@ -34,8 +34,8 @@ const Navigation = props => {
         <Container>
             <h4 style={{margin:'4px'}}>Navigate</h4>
             <Buttons>
-                <Button text={"back"} active={props.back && !props.lemmaFlag && props.currentGoal} onClick={props.advance(props.state, props.stateRecord, props.stage - 1, true)}/>
-                <Button text={"forward"} active={props.forward && !props.lemmaFlag && props.currentGoal} onClick={props.advance(props.state, props.stateRecord, props.stage + 1, false)}/>
+                <Button text={"back"} active={props.back && !props.lemmaFlag && props.currentGoal && props.messageQue.length === 0} onClick={props.advance(props.state, props.stateRecord, props.stage - 1, true)}/>
+                <Button text={"forward"} active={props.forward && !props.lemmaFlag && props.currentGoal && props.messageQue.length === 0} onClick={props.advance(props.state, props.stateRecord, props.stage + 1, false)}/>
             </Buttons>
         </Container>
     );

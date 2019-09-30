@@ -10,7 +10,6 @@ const Container = styled.div`
     margin: ${props => props.goal?'75px':'5px'} 0 10px 0;
     padding: 0 10px;
 
-    border: ${props => props.currentGoal ? '2px solid #555' : 'none'};
     background: ${props => props.currentGoal ? 'yellow' : 'none'};
 
     border-radius: 2px;
@@ -24,7 +23,7 @@ const Container = styled.div`
 
 const Justification = props => {
     return (
-        <Container goal={props.goal} currentGoal={props.currentGoal}>
+        <Container goal={props.goal} currentGoal={props.currentGoal} onClick={props.click(props.citationIds)}>
             {props.justification ? props.justification.type : "GOAL"}{props.citations.map(c => `, ${c}`)}
         </Container>
     );
@@ -55,11 +54,15 @@ const msp = () => {
             citations = []
         }
 
-        
-
-
-        return {...state, justification: just, goal: !sent.justificationId, currentGoal: state.currentGoal === ownProps.id, citations: citations}
+        return {...state, citationIds: just ? just.citationIds : [], justification: just, goal: !sent.justificationId, currentGoal: state.currentGoal === ownProps.id, citations: citations}
     }
 }
 
-export default connect(msp)(Justification)
+const mdp = dispatch => {
+    return ({
+        click: citationIds => () => dispatch({type: "SET HIGHLIGHTS", ids: citationIds})
+    
+    })
+}
+
+export default connect(msp, mdp)(Justification)

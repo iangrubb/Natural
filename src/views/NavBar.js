@@ -68,7 +68,7 @@ const NavBar = () => {
             <Button to="/home">Home</Button>
             <Button to="/proof">Proof</Button>
             <Button to="/newProof">New</Button>
-            <Button to="/guide">Guide</Button>
+            {/* <Button to="/guide">Guide</Button> */}
             <Button to="/exercises">Exercises</Button>
 
         </Container>

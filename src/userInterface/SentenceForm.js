@@ -30,12 +30,16 @@ const Container = styled.div`
 
     width: 100%;
 
-    background: ${colors.mediumSurface};
+    border-radius: 2px;
 
-    box-shadow: -8px -8px 0 ${colors.darkSurface};
-    width: 400px
-    margin: 40px 0 0 0;
-    padding: 20px;
+    background: ${colors.lightSurface};
+    border: 12px solid ${colors.mediumSurface};
+
+    box-shadow: 4px 4px 0 ${colors.darkSurface};
+
+    display: flex;
+    flex-direction: column;
+    align-items:center;
 
 `
 
@@ -69,7 +73,8 @@ const ButtonRow = styled.div`
 
 const Label = styled.h3`
     padding: 0 10px;
-    margin: 4px 0;
+    margin: 8px 0;
+    font-size: 1em;
 `
 
 
@@ -207,7 +212,7 @@ const SentenceForm = props => {
         const remainder = sentences.filter( s => s.id !== focus)
 
 
-        if (target.type === "gap") {
+        if (target && target.type === "gap") {
 
             if (type === "conditional" || type === "conjunction" || type === "disjunction") {
 
@@ -303,6 +308,8 @@ const SentenceForm = props => {
     return (
         <Container>
 
+            <Label>{props.label}</Label>
+
             <Window >
                 {display(sentences.find(s=>s.id === 1), true)}
             </Window>
@@ -325,7 +332,10 @@ const SentenceForm = props => {
             : null}
 
             <ButtonRow>
-                <Button active={!sentences.find( s => s.type === "gap" || (s.terms && s.terms.length === 0))} text="Confirm" onClick={props.confirm(totalResult)}/>
+                <Button active={!sentences.find( s => s.type === "gap" || (s.terms && s.terms.length === 0))} text="Confirm" onClick={()=>{
+                    props.confirm(totalResult)()
+                    clear()
+                }}/>
                 <Button active={true} text="Clear" onClick={clear}/>
                 <Button active={true} text="Cancel" onClick={props.cancel}/>
             </ButtonRow>

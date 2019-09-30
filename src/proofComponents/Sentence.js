@@ -36,7 +36,7 @@ const Container = styled.div`
     transition: margin 0.4s ease;
 
     background: ${props => pickBackground(props.relevance)};
-    border: ${props => props.active ? `4px solid ${colors.focusOutline}` : 'none'};
+    border: ${props => props.highlighted ? '4px solid #CECB02' : 'none'};
 
     box-shadow: ${props => props.clickable ? `2px 2px 0 ${colors.darkSurface}` : "none"}
 
@@ -48,11 +48,13 @@ const Container = styled.div`
 
 
 const Sentence = props => {
+    
     return (
         <Fade right>
             <Container 
                 relevance={props.relevance}
                 clickable={props.clickable}
+                highlighted={props.highlighted}
                 isAGoal={props.isAGoal}
                 onClick={props.clickable ? props.onClick(props.globalGoal, props.focus, props.sentence, props.options) : null}
             >
@@ -90,9 +92,6 @@ const msp = () => {
 
         const rel = relevance(sentence, goal, state.proofs)
 
-        console.log(rel)
-
-        console.log(state, ownProps)
         return {
             ...state,
             isAGoal: !sentence.justificationId,
@@ -100,6 +99,7 @@ const msp = () => {
             globalGoal: goal,
             focus: focus,
             relevance: rel,
+            highlighted: state.highlightArray.includes(ownProps.id),
             clickable:
                 (!goal && !complete && !sentence.justificationId) ||
                 (rel === "goal" && goal && !focus && !ownProps.lemmaFlag && sentence.content.type !== "contradiction") ||
@@ -115,6 +115,7 @@ const mdp = dispatch => {
             dispatch({type: "SET GOAL", newId: sentence.id})
         } else if (!focus) {
             dispatch({type: "SET FOCUS", newId: sentence.id})
+            dispatch({type: "SET HIGHLIGHTS", ids: [sentence.id]})
         }
         
     }}

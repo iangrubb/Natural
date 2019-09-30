@@ -15,7 +15,9 @@ const defaultState = {
     globalConstants: [],
     stateRecord: [],
     stage: 0,
-    maxStage: 0
+    maxStage: 0,
+    messageQue: [],
+    highlightArray: []
 }
 
 
@@ -194,6 +196,27 @@ const handleMaxStage = (state = defaultState.maxStage, action) => {
     }
 }
 
+const handleMessageQue = (state = defaultState.messageQue, action) => {
+    switch (action.type) {
+        case "PUSH":
+            return [...state, {message: action.message, focusIds: action.focusIds}]
+        case "SHIFT":
+            return state.slice(1, state.length)
+        default:
+            return state
+    }
+}
+
+const handleHighlightArray = (state = defaultState.highlightArray, action) => {
+    switch (action.type) {
+        case "SET HIGHLIGHTS":
+            return action.ids
+        case "UNSET HIGHLIGHTS":
+            return []
+        default:
+            return state
+    }
+}
 
 
 const rootReducer = combineReducers({
@@ -210,6 +233,8 @@ const rootReducer = combineReducers({
     stateRecord: handleStateRecord,
     stage: handleStage,
     maxStage: handleMaxStage,
+    messageQue: handleMessageQue,
+    highlightArray: handleHighlightArray
 })
 
 export default rootReducer

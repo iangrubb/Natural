@@ -11,7 +11,7 @@ import {colors, fonts} from '../styles'
 
 const Container = styled.div`
     width: 84%;
-    height: 14%;
+    height: 90px;
 
     border-radius: 2px;
 
@@ -28,7 +28,9 @@ const Container = styled.div`
 const TextContainer = styled.div`
     width:90%;
     height: 40px;
-    margin: 4px 0;
+
+    font-size: 1.3em;
+    font-family: ${fonts.text}
 
     display: flex;
     justify-content: center;
@@ -37,15 +39,23 @@ const TextContainer = styled.div`
     background: ${colors.lightSurface};
 `
 
+const Label = styled.h2`
+
+    font-size: ${props => props.size}em;
+    text-align: center;
+    margin: 4px 0 0 0;
+
+`
+
 const Goal = props => {
     return (
         <Container>
             {props.complete ?
-            <h1 style={{textAlign:'center'}}>Proof Complete!</h1> :
+            <Label size={1.8}>Proof Complete!</Label> :
             <>
-                <h4 style={{margin:'4px'}}>Current Goal</h4>
-                <TextContainer><div style={{display: 'flex', alignItems:'flex-end'}}>{props.goalSentence}</div></TextContainer>
-                <Button text={'change'} active={props.currentGoal && !props.currentFocus && !props.lemmaFlag} onClick={props.onClick(props.currentGoal && !props.currentFocus)}/>
+                <Label size={1}>Current Goal</Label>
+                <TextContainer>{props.goalSentence}</TextContainer>
+                <Button minor={true} text={'change'} active={props.currentGoal && !props.currentFocus && !props.lemmaFlag && props.messageQue.length === 0} onClick={props.onClick(props.currentGoal && !props.currentFocus)}/>
             </>}
         </Container>
     );
@@ -53,7 +63,7 @@ const Goal = props => {
 
 const msp = () => {
     return state => {
-        const goalSentence = state.currentGoal ? display(state.sentences.find(s=>s.id===state.currentGoal).content, true) : "None"
+        const goalSentence = state.currentGoal ? display(state.sentences.find(s=>s.id===state.currentGoal).content, true) : "(none)"
 
         return {...state, goalSentence: goalSentence}
     }

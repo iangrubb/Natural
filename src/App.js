@@ -29,7 +29,7 @@ const App = props => {
       <Switch>
         <Route path="/newProof" component={NewProof} />
         <Route path="/proof" component={ProofPage} />
-        <Route path="/guide" component={Guide} />
+        {/* <Route path="/guide" component={Guide} /> */}
         <Route path="/exercises" component={Exercises} />
         <Route path="/" component={Home} />
       </Switch>

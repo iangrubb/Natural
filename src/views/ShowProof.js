@@ -34,16 +34,12 @@ const Proof = styled.div`
 
     overflow: scroll;
 
-    height: 94%;
+    max-height: ${props=>props.lemmaFlag ? '65%' : 'none'};
+
 
     background: ${colors.lightSurface};
 
-    border: 12px solid ${colors.mediumSurface};
 
-    border-radius: 2px;
-
-
-    box-shadow: 4px 4px 0 ${colors.darkSurface};
     padding: 8px 0;
 
     display: flex;
@@ -98,9 +94,9 @@ const ShowProof = props => {
     return (
         <Page>
             <Interactions>
-                <Goal complete={!props.firstGoal} lemmaFlag={lemmaFlag}/>
-                <PromptContainer complete={!props.firstGoal} lemmaFlag={lemmaFlag} setLemmaFlag={setLemmaFlag} />
-                <Message complete={!props.firstGoal}/>
+                <Goal complete={!props.firstGoal && props.messageQue.length === 0} lemmaFlag={lemmaFlag}/>
+                <PromptContainer complete={!props.firstGoal && props.messageQue.length === 0} lemmaFlag={lemmaFlag} setLemmaFlag={setLemmaFlag} />
+                <Message complete={!props.firstGoal && props.messageQue.length === 0}/>
                 <Navigation lemmaFlag={lemmaFlag} />
             </Interactions>
 
@@ -122,7 +118,7 @@ const ShowProof = props => {
 
             <Fade bottom collapse when={lemmaFlag} ><FormContainer>
 
-                 <SentenceForm type={props.proofType} cancel={() => setLemmaFlag(false)} confirm={result => () => {
+                <SentenceForm label="Enter a new lemma:" type={props.proofType} cancel={() => setLemmaFlag(false)} confirm={result => () => {
                 props.fill(props.state, props.goalSentence , result)
                 setLemmaFlag(false)}}/>
 

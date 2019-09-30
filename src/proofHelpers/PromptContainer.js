@@ -50,9 +50,30 @@ const ButtonRow = styled.div`
 
 
 
-const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, setLemmaFlag) => {
+const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, setLemmaFlag, messageQue) => {
     
-    if (!state.sentences.find(s=> !s.jusificationId)) {
+    if (messageQue.length > 0) {
+
+        dispatch({type: "SET HIGHLIGHTS", ids: messageQue[0].focusIds})
+
+        return (
+            <Options
+                instructions={messageQue[0].message}
+                prompts={["ok"]}
+                actions={[
+                    ()=>{
+                        dispatch({type:"SHIFT"})
+                        dispatch({type:"UNSET HIGHLIGHTS"})
+                    }
+            ]}/>
+        )
+
+
+        // Callback shifts array and unsets highlights
+
+
+
+    } else if (!state.sentences.find(s=> !s.jusificationId)) {
         return null
     } else if (!goalSentence) {
         return <Instructions text="Select a goal sentence you want to work towards proving"/>
@@ -68,10 +89,11 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "conjunction":
                     const foundLeft = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.left) && findAbove(goalSentence.id, s.id, state.proofs))
                     const foundRight = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.right) && findAbove(goalSentence.id, s.id, state.proofs))
+                    
                     return (
                         <Options
-                            instructions={"Proving a conjunction requires proving both conjuncts."}
-                            prompts={["ok"]}
+                            instructions={"Proving this conjunction will require proving both conjuncts."}
+                            prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", foundLeft: foundLeft, foundRight: foundRight}, dispatch)}
                         ]}/>
@@ -82,7 +104,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
 
                     return (
                         <Options
-                            instructions={"Which disjunct do you plan to prove?"}
+                            instructions={"Proving this disjunction requires proving one of its disjuncts. Which disjunct do you plan to prove?"}
                             prompts={["left", "right"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", side: "left", found: disLeft}, dispatch)},
@@ -92,8 +114,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "conditional":
                     return (
                         <Options
-                            instructions={"Proving a conditional requires proving its consequent after assuming its antecedent."}
-                            prompts={["ok"]}
+                            instructions={"Proving this conditional requires a proof of its consequent from its antecedent."}
+                            prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch)}
                         ]}/>
@@ -101,22 +123,22 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "negation":
                     return (
                         <Options
-                            instructions={"Proving a negation requires proving a contradiction after assuming its opposite."}
-                            prompts={["ok"]}
+                            instructions={"Proving this negation requires proving a proof of a contradiction from its opposite."}
+                            prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch)}
                         ]}/>
                     )
                 case "existential":
                     return (
-                        <ConstantChoice instructions={"Choose a constant"} constants={state.globalConstants}
+                        <ConstantChoice instructions={"Proving this existential requires proving that the property it ascribes holds for some constant. What constant do you choose?"} constants={state.globalConstants}
                         onClick={constant => () => fill(state, goalSentence, focusSentence, {rule: "canon", constant: constant}, dispatch)}/>
                     )
                 case "universal":
                     return (
                         <Options
-                            instructions={"Prove everything has a property by proving that an arbitrary object has the property."}
-                            prompts={["ok"]}
+                            instructions={"Proving this universal requires proving that an arbitrary object as the property ascribed."}
+                            prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch)}
                         ]}/>
@@ -132,7 +154,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "conjunction":
                     return (
                         <Options
-                            instructions={"Which conjunct do you want to use?"}
+                            instructions={"This conjunction can be used to establish either conjunct. Which conjunct do you want to establish now?"}
                             prompts={["left", "right"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {side: "left"}, dispatch)},
@@ -142,8 +164,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "conditional":
                     return (
                         <Options
-                        instructions={"As long as you can prove its antecedent, this conditional allows you to use its consequent."}
-                        prompts={["ok"]}
+                        instructions={"This conditional allows you to use its consequent, as long as you can prove its antecedent."}
+                        prompts={["confirm"]}
                         actions={[
                             ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
                     ]}/>
@@ -151,8 +173,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "disjunction":
                     return (
                         <Options
-                            instructions={"You can derive the goal by deriving it from each disjunct."}
-                            prompts={["ok"]}
+                            instructions={"This disjunction allows you to establish the goal, as long as you can establish it from each disjunct."}
+                            prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
                         ]}/>
@@ -160,22 +182,22 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "negation":
                     return (
                         <Options
-                        instructions={"As long as you can prove its opposite, this negation allows you to derive a contradiction."}
-                        prompts={["ok"]}
+                        instructions={"This negation allows you to derive a contradiction, as long as you can prove its opposite."}
+                        prompts={["confirm"]}
                         actions={[
                             ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
                     ]}/>
                     )
                 case "universal":
                     return (
-                        <ConstantChoice instructions={"Choose a constant"} constants={state.globalConstants}
+                        <ConstantChoice instructions={"This universal allows you to establish that the property it ascribes holds for a any constant. What constant do you choose?"} constants={state.globalConstants}
                         onClick={constant => () => fill(state, goalSentence, focusSentence, {constant: constant}, dispatch)}/>
                     )
                 case "existential":
                     return (
                         <Options
-                            instructions={"Using an existential sentence to achieve a goal requires showing how an arbitrary object's having the property in question shows the goal."}
-                            prompts={["ok"]}
+                            instructions={"This existential allows you to establish the goal, as long as you can establish it while assuming that an arbitrary object has the property it ascribes."}
+                            prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
                         ]}/>
@@ -201,20 +223,21 @@ const PromptContainer = props => {
             null :
             <>
             {/* Main Prompt */}
-            {props.choosePrompt(props.state, props.goalSentence, props.focusSentence, props.lemmaFlag, props.setLemmaFlag)}
+            {props.choosePrompt(props.state, props.goalSentence, props.focusSentence, props.lemmaFlag, props.setLemmaFlag, props.messageQue)}
 
             {/* Optional Lemma Prompt */}
-            {props.goalSentence && !props.lemmaFlag && !props.focusSentence ?
+
+            {props.goalSentence && !props.lemmaFlag && !props.focusSentence && props.messageQue.length === 0 ?
                 <Alternative>
                     <p>You may instead add a new lemma to the proof:</p>
-                    <Button text={"lemma"} active={true} onClick={()=>props.setLemmaFlag(true)}/>
+                    <Button minor={true} text={"lemma"} active={true} onClick={()=>props.setLemmaFlag(true)}/>
                 </Alternative>
             : null}
 
             {/* Optional Cancel Button */}
 
 
-            {props.focusSentence ? <Button text={"cancel"} active={true} onClick={props.cancel}/>: null}
+            {props.focusSentence ? <Button minor={true} text={"cancel"} active={true} onClick={props.cancel}/>: null}
 
             {/* Optional Special Rules Prompt */}
 
@@ -222,9 +245,9 @@ const PromptContainer = props => {
             <Alternative>
                 <p>You may instead use a special rule:</p>
                 <ButtonRow>
-                    <Button text="DNE" active={true} onClick={props.specialRule(props.state, props.goalSentence, props.focusSentence, "dne")} />
-                    <Button text="Reit" active={true}  onClick={props.specialRule(props.state, props.goalSentence, props.focusSentence, "reit")} />
-                    <Button text ="Exp" active={true} onClick={props.specialRule(props.state, props.goalSentence, props.focusSentence, "exp")} />  
+                    <Button minor={true} text="DNE" active={true} onClick={props.specialRule(props.state, props.goalSentence, props.focusSentence, "dne")} />
+                    <Button minor={true} text="Reit" active={true}  onClick={props.specialRule(props.state, props.goalSentence, props.focusSentence, "reit")} />
+                    <Button minor={true} text ="Exp" active={true} onClick={props.specialRule(props.state, props.goalSentence, props.focusSentence, "exp")} />  
                 </ButtonRow>
             </Alternative>
             : null }
@@ -250,8 +273,11 @@ const msp = () => {
 
 const mdp = dispatch => {
     return {
-        choosePrompt: (state, goal, focus, lemmaFlag, setLemmaFlag) => choosePrompt(state, goal, focus, dispatch, lemmaFlag, setLemmaFlag),
-        cancel: ()=>dispatch({type: "UNSET FOCUS"}),
+        choosePrompt: (state, goal, focus, lemmaFlag, setLemmaFlag, messageQue) => choosePrompt(state, goal, focus, dispatch, lemmaFlag, setLemmaFlag, messageQue),
+        cancel: ()=>{
+            dispatch({type: "UNSET FOCUS"})
+            dispatch({type: "UNSET HIGHLIGHTS"})
+        },
         specialRule: (state, goal, focus, rule) => () => fill(state, goal, focus, {rule: rule}, dispatch)
     }
 }

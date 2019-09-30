@@ -12,6 +12,8 @@ import Sentence from './Sentence';
 
 const Container = styled.div`
 
+    border: ${props => props.highlighted ? '2px solid #CECB02' : 'none'};
+
     margin: 4px 0 4px ${props => props.depth===1? '0': '30'}px;
 
     padding: 6px;
@@ -40,7 +42,7 @@ const Else = styled.div`
 
 const Proof = props => {
     return (
-        <Fade right ><Container depth={props.depth}>
+        <Fade right ><Container depth={props.depth} highlighted={props.highlighted}>
             <Premises>
                 {props.children.slice(0, props.premiseCount).map(id => <Sentence lemmaFlag={props.lemmaFlag} key={id} id={id}/>)}
             </Premises>
@@ -78,7 +80,7 @@ const msp = () => {
             }
         }
 
-        return {...state, children: children, premiseCount: children.findIndex(x=> x===firstAfterLine), depth: depth(ownProps.id)}
+        return {...state, highlighted: state.highlightArray.includes(ownProps.id), children: children, premiseCount: children.findIndex(x=> x===firstAfterLine), depth: depth(ownProps.id)}
     }
 }
 

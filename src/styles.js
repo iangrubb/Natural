@@ -2,18 +2,18 @@ import styled from 'styled-components'
 
 export const colors = {
 
-    darkText: '#120F14',
+    darkText: '#0A050A',
     lightText: '#EBEAEF',
-    highlightText: '#ECF280',
+    highlightText: '#FCF926',
 
-    darkSurface: '#1F1823',
+    darkSurface: '#18091B',
     mediumSurface: '#A49FAD',
     lightSurface: '#F9F7FC',
 
-    focusOutline: '#CECB02',
+    hightlightOutline: '#FCF946',
 
-    availableBackground: '#A2D3AC',
-    currentGoalBackground: '#F3FF9B',
+    availableBackground: '#42C2C9',
+    currentGoalBackground: '#46E681',
 
 
     
@@ -38,4 +38,11 @@ export const Page = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+`
+
+const boxstyle = `  
+    border-radius: 2px;
+    background: ${colors.lightSurface};
+    border: 12px solid ${colors.mediumSurface};
+    box-shadow: 4px 4px 0 ${colors.darkSurface};
 `

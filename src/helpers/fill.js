@@ -9,6 +9,8 @@ const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm
 
 const fill = (state, goalSentence, focusSentence, options, dispatch) => {
 
+    // Unset the highlighted focus sentence.
+    dispatch({type: "UNSET HIGHLIGHTS"})
 
     if (state.stage < state.maxStage) {
         dispatch({type: "DISCARD STAGES", finalStage: state.stage + 1})
@@ -63,6 +65,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
         }
     })()
 
+
     // Element Makers (these return id of the thing made)
 
     const newSentence = (content, goalId, proofId, dispatch) => {
@@ -113,8 +116,9 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
         }
     }
 
+    const newNotification = (message, ids) => dispatch({type: "PUSH", message: message, focusIds: ids})
 
-    
+
 
 
     // Proof Rule Cases
@@ -134,32 +138,39 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                 newJustification(goalSentence.id, "DNE", [dnId], dispatch)
                 dispatch({type: "SET GOAL", newId: dnId})
                 break
+
             case "reit":
                 const foundCopy = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content) && findAbove(goalSentence.id, s.id, state.proofs))
 
                 if (foundCopy) {
                     newJustification(goalSentence.id, "Reiteration", [foundCopy.id], dispatch)
                     setNextGoal(goalSentence.id)
+                } else {
+                    newNotification("The chosen sentence isn't available for reiteration.", [goalSentence.id])
                 }
-
                 break
+
             case "exp":
                 const expId = newSentence({type:"contradiction"}, goalSentence.id, parentId, dispatch)
                 newJustification(goalSentence.id, "Explosion", [expId], dispatch)
                 dispatch({type: "SET GOAL", newId: expId})
+
                 break
             case "canon":
                 switch(focusSentence.content.type) {
+
                     case "conjunction":
                         let leftId
                         let rightId
                         if (options.foundLeft) {
                             leftId = options.foundLeft.id
+                            newNotification("The conjunctions's left conjunct was already available earlier in the proof.", [goalSentence.id, leftId])
                         } else {
                             leftId = newSentence(focusSentence.content.left, goalSentence.id, parentId, dispatch)
                         }
                         if (options.foundRight) {
                             rightId = options.foundRight.id
+                            newNotification("The conjunction's right conjunct was already available earlier in the proof.", [goalSentence.id, rightId])
                         } else {
                             rightId = newSentence(focusSentence.content.right, goalSentence.id, parentId, dispatch)
                         }
@@ -173,17 +184,19 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                         } else {
                             setNextGoal(goalSentence.id)
                         }
-                        
                         break
+
                     case "disjunction":
                         if (options.found) {
                             newJustification(goalSentence.id, "∨i", [options.found.id], dispatch)
                             setNextGoal(goalSentence.id)
+                            newNotification("The chosen disjunct was already available earlier in the proof.", [goalSentence.id, options.found.id])
                         } else {
                             const disId = newSentence(focusSentence.content[options.side], goalSentence.id, parentId, dispatch)
                             newJustification(goalSentence.id, "∨i", [disId], dispatch)
                             dispatch({type: "SET GOAL", newId: disId})
                         }
+
                         break
                     case "conditional":
                         const goalIds = newProof(focusSentence.content.left, focusSentence.content.right, goalSentence.id, parentId, dispatch)
@@ -195,36 +208,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                         newJustification(goalSentence.id, "¬i", [Ids.main], dispatch)
                         dispatch({type: "SET GOAL", newId: Ids.sub})
                         break
-                    case "contradiction":
-                        
-                        const chosenSentence = state.sentences.find( s => s.id === options.chosenId)
 
-                        let oppositeContent
-
-                        if (chosenSentence.content.type === "negation") {
-                            oppositeContent = chosenSentence.content.right
-                        } else {
-                            oppositeContent = {type: "negation", right: chosenSentence.content}
-                        }
-
-                        const foundOpposite = state.sentences.find( s => sentenceEquality(s.content, oppositeContent) && findAbove(goalSentence.id, s.id, state.proofs))
-
-                        let oppositeId
-
-                        if (foundOpposite) {
-                            oppositeId = foundOpposite.id
-                        } else {
-                            oppositeId = newSentence(oppositeContent, goalSentence.id, parentId, dispatch)
-                            dispatch({type: "SET GOAL", newId: oppositeId})
-                        }
-
-                        newJustification(goalSentence.id, "¬e", [chosenSentence.id, oppositeId], dispatch)
-
-                        if (foundOpposite){
-                            setNextGoal(goalSentence.id)
-                        }
-
-                        break
                     case "existential":
 
                         let constant
@@ -243,11 +227,14 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                         if (found) {
                             newJustification(goalSentence.id, "∃i", [found.id], dispatch)
                             setNextGoal(goalSentence.id)
+                            newNotification("The chosen instantiation was already available earlier in the proof.", [goalSentence.id, found.id])
                         } else {
                             const lineId = newSentence(instantiation, goalSentence.id, parentId, dispatch)
                             newJustification(goalSentence.id, "∃i", [lineId], dispatch)
                             dispatch({type: "SET GOAL", newId: lineId})
                         }
+
+                        
                         break
                     case "universal":
 
@@ -257,6 +244,8 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                         newJustification(goalSentence.id, "∀i", [lineId], dispatch)
                         dispatch({type: "ADD CONSTANT", newConstant: newConstant})
                         dispatch({type: "SET GOAL", newId: lineId})
+                        newNotification(`The aribrary constant '${newConstant}' was added to the proof.`, [lineId, goalSentence.id])
+
                         break
                 }
         }
@@ -269,6 +258,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                 if (sentenceEquality(derived, goalSentence.content)) {
                     newJustification(goalSentence.id, "&e", [focusSentence.id], dispatch)
                     setNextGoal(goalSentence.id)
+                    newNotification("That conjunct satisfies the previous goal!", [focusSentence.id, goalSentence.id])
                 } else {
                     const conId = newSentence(derived, goalSentence.id, parentId, dispatch)
                     newJustification(conId, "&e", [focusSentence.id], dispatch)
@@ -284,6 +274,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                 
                 if (antecedent) {
                     minorId = antecedent.id
+                    newNotification("The required antecedent was already available, so the consequent will be established.", [focusSentence.id, antecedent.id])
                 } else {
                     minorId = newSentence(focusSentence.content.left, goalSentence.id, parentId, dispatch)
                     dispatch({type: "SET GOAL", newId: minorId})
@@ -293,6 +284,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                     newJustification(goalSentence.id, "→e", [minorId, focusSentence.id], dispatch)
                     if (antecedent) {
                         setNextGoal(goalSentence.id)
+                        newNotification("The new consequent satisfies the previous goal!", [focusSentence.id, goalSentence.id])
                     }
                 } else {
                     const conId = newSentence(consequent, goalSentence.id, parentId, dispatch)
@@ -312,13 +304,14 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                 break
 
             case "negation":
-                
+
                 const unnegated = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.right) && findAbove(goalSentence.id, s.id, state.proofs))
 
                 let unnegatedId
                 
                 if (unnegated) {
                     unnegatedId = unnegated.id
+                    newNotification("The required non-negated sentence was already available, so the contradiction will be established.", [focusSentence.id, unnegated.id])
                 } else {
                     unnegatedId = newSentence(focusSentence.content.right, goalSentence.id, parentId, dispatch)
                     dispatch({type: "SET GOAL", newId: unnegatedId})
@@ -328,11 +321,13 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                     newJustification(goalSentence.id, "¬e", [unnegatedId, focusSentence.id], dispatch)
                     if (unnegated){
                         setNextGoal(goalSentence.id)
+                        newNotification("The contradiction satisfies the previous goal!", [focusSentence.id, goalSentence.id])
                     }
                 } else {
                     const conId = newSentence({type: "contradiction"}, goalSentence.id, parentId, dispatch)
                     newJustification(conId, "¬e", [unnegatedId, focusSentence.id], dispatch)
                 }
+
                 break
                 
             case "contradiction":
@@ -346,6 +341,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
 
                 if (options.constant) {
                     constant = options.constant
+                    newNotification("That instantiation satisfies the previous goal!", [focusSentence.id, goalSentence.id])
                 } else {
                     constant = alphabet.find( l => !state.globalConstants.includes(l))
                     dispatch({type: "ADD CONSTANT", newConstant: constant})
@@ -361,6 +357,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
                     newJustification(lineId, "∀e", [focusSentence.id], dispatch)
                 }
 
+
                 break
             case "existential":
                 const newConstant = alphabet.find( l => !state.globalConstants.includes(l))
@@ -372,6 +369,9 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
 
                 dispatch({type: "ADD CONSTANT", newConstant: newConstant})
                 dispatch({type: "SET GOAL", newId: subProofIds.sub})
+
+
+                newNotification(`The aribrary constant '${newConstant}' was added for use in the subproof.`, [subProofIds.main])
 
                 break
         }
