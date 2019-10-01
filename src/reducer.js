@@ -17,7 +17,8 @@ const defaultState = {
     stage: 0,
     maxStage: 0,
     messageQue: [],
-    highlightArray: []
+    highlightArray: [],
+    exerciseData: []
 }
 
 
@@ -218,6 +219,30 @@ const handleHighlightArray = (state = defaultState.highlightArray, action) => {
     }
 }
 
+const handleExerciseData = (state = defaultState.exerciseData, action) => {
+    switch (action.type) {
+        case "LOAD EXERCISE DATA":
+            return action.payload.data.map( cat => {
+                return {
+                    id: parseInt(cat.id),
+                    logic: cat.attributes.logic,
+                    name: cat.attributes.name,
+                    rules: cat.attributes.rules,
+                    proofs: cat.attributes.proof_data.map( p => {
+                        return {
+                            proofId: p.id,
+                            type: p.type,
+                            conclusion: JSON.parse(p.conclusion),
+                            premises: p.premises.map( prem => JSON.parse(prem))
+                        }
+                    }),
+                }
+            })
+        default:
+            return state
+    }
+}
+
 
 const rootReducer = combineReducers({
     proofType: handleProofType,
@@ -234,7 +259,8 @@ const rootReducer = combineReducers({
     stage: handleStage,
     maxStage: handleMaxStage,
     messageQue: handleMessageQue,
-    highlightArray: handleHighlightArray
+    highlightArray: handleHighlightArray,
+    exerciseData: handleExerciseData
 })
 
 export default rootReducer

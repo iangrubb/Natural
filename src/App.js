@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -10,6 +10,8 @@ import Exercises from './views/Exercises'
 import Home from './views/Home'
 import Guide from './views/Guide'
 import NewProof from './views/NewProof'
+
+import { fetchExercises } from './actions'
 
 const Site = styled.div`
   width: 100vw;
@@ -23,6 +25,12 @@ const Site = styled.div`
 `
 
 const App = props => {
+
+  useEffect(() => {
+    props.fetchExercises()
+  }, [])
+
+
   return (
     <Site>
       < NavBar />
@@ -37,5 +45,8 @@ const App = props => {
   )
 }
 
+const mdp = dispatch => {
+  return {fetchExercises: fetchExercises(dispatch)}
+}
 
-export default App
+export default connect(null, mdp)(App)

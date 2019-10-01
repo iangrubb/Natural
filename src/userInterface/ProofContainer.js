@@ -100,7 +100,7 @@ const ProofContainer = props => {
                 </List>
             </CategoryDetails>
             <ProofList>
-                {props.proofs.map( (p, idx) => <ProofCard key={idx} {...p} type={props.type}/>)}
+                {props.proofs.map( p => <ProofCard key={p.proofId} {...p} />)}
             </ProofList>
         </Category>
     );
