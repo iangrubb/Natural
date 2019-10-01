@@ -44,11 +44,11 @@ const Proof = props => {
     return (
         <Fade right ><Container depth={props.depth} highlighted={props.highlighted}>
             <Premises>
-                {props.children.slice(0, props.premiseCount).map(id => <Sentence lemmaFlag={props.lemmaFlag} key={id} id={id}/>)}
+                {props.children.slice(0, props.premiseCount).map(id => <Sentence depth={props.depth}  lemmaFlag={props.lemmaFlag} key={id} id={id}/>)}
             </Premises>
             <Else>
                 {props.children.slice(props.premiseCount, props.children.length).map(id => (id % 2 === 0 ?
-                    <Sentence lemmaFlag={props.lemmaFlag} key={id} id={id}/>
+                    <Sentence depth={props.depth} lemmaFlag={props.lemmaFlag} key={id} id={id}/>
                     :  
                     <ProofR lemmaFlag={props.lemmaFlag} key={id} id={id}/>
                 ))}

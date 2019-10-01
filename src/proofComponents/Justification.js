@@ -7,7 +7,7 @@ const Container = styled.div`
     height: 40px;
     
 
-    margin: ${props => props.goal?'75px':'5px'} 0 10px 0;
+    margin: ${props => props.spacing}px 0 ${props => props.subproofEnd ? '12' : '0'}px 0;
     padding: 0 10px;
 
     border-radius: 2px;
@@ -25,7 +25,7 @@ const Justification = props => {
     // onClick={props.click(props.citationIds)}
 
     return (
-        <Container goal={props.goal} currentGoal={props.currentGoal} >
+        <Container subproofEnd={props.subproofEnd} spacing={props.spacing} goal={props.goal} currentGoal={props.currentGoal} >
             {props.justification ? props.justification.type : null}{props.citations.map(c => `, ${c}`)}
         </Container>
     );
@@ -56,7 +56,36 @@ const msp = () => {
             citations = []
         }
 
-        return {...state, citationIds: just ? just.citationIds : [], justification: just, goal: !sent.justificationId, currentGoal: state.currentGoal === ownProps.id, citations: citations}
+        const parent = state.proofs.find( p => p.children.includes(ownProps.id))
+        
+        const selfIndex = parent.children.indexOf(ownProps.id)
+        
+        const firstInProof = selfIndex === 0
+        
+        const firstAfterLine = parent.children.find( c => {
+
+            const child = state.sentences.find(s=> s.id === c)  
+
+            return !child.justificationId || (state.justifications.find(j=> j.id === child.justificationId).type !== "premise" && state.justifications.find(j=> j.id === child.justificationId).type !== "assumption" )
+        }).id === ownProps.id
+
+        const subproofEnd = parent.children[parent.children.length - 1] === ownProps.id
+
+        const isGoal = !sent.justificationId
+
+
+
+
+
+
+        return {...state,
+            citationIds: just ? just.citationIds : [],
+            justification: just, goal: !sent.justificationId,
+            currentGoal: state.currentGoal === ownProps.id,
+            citations: citations,
+            subproofEnd: subproofEnd,
+            spacing: 10 + (firstInProof ? 10 : 0) + (firstAfterLine ? 6 : 0) + (isGoal ? 75 : 0)
+        }
     }
 }
 

@@ -17,7 +17,6 @@ import {colors, fonts} from '../styles'
 
 const Container = styled.div`
     width: 84%;
-    height: 270px;
 
     border-radius: 2px;
 
@@ -45,7 +44,7 @@ const Alternative = styled.div`
 
     font-size: 0.9em;
 
-    padding: 4px;
+    padding: 10px;
 
 `
 
@@ -59,6 +58,8 @@ const Prompt = styled.div`
 
 `
 const Label = styled.h2`
+
+    padding: 10px;
 
     font-size: ${props => props.size}em;
     text-align: center;

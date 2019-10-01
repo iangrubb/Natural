@@ -52,7 +52,6 @@ const Interactions = styled.div`
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
 `
 
@@ -61,6 +60,8 @@ const Column = styled.div`
 
 
     padding: 10px 0 0 0;
+
+    margin: ${props => props.shift}px 0 0 0;
 
     display: flex;
     flex-direction: column;
@@ -81,9 +82,6 @@ const ProofColumn = styled.div`
 const FormContainer = styled.div`
 
 
-    
-
-
 `
 
 const ShowProof = props => {
@@ -95,7 +93,7 @@ const ShowProof = props => {
         <Page>
             <Interactions>
                 <PromptContainer complete={!props.firstGoal && props.messageQue.length === 0} lemmaFlag={lemmaFlag} setLemmaFlag={setLemmaFlag} />
-                <Message complete={!props.firstGoal && props.messageQue.length === 0}/>
+                {/* <Message complete={!props.firstGoal && props.messageQue.length === 0}/> */}
                 <Goal complete={!props.firstGoal && props.messageQue.length === 0} lemmaFlag={lemmaFlag}/>
                 <Navigation lemmaFlag={lemmaFlag} />
             </Interactions>
@@ -104,13 +102,13 @@ const ShowProof = props => {
             <ProofColumn>
 
             <Proof lemmaFlag={lemmaFlag} >
-                <Column width={60} align={"center"}>
+                <Column shift={0} width={60} align={"center"}>
                     {props.lines.map( (id, idx) => <Counter key={id} id={id} order={idx + 1} firstGoalPosition={props.firstGoalPosition}/>)}
                 </Column>
-                <Column width={240} align={"flex-start"}>
+                <Column shift={0} width={240} align={"flex-start"}>
                     <ProofR key={1} id={1} lemmaFlag={lemmaFlag}/>
                 </Column>
-                <Column width={140} align={"center"}>
+                <Column shift={0} width={140} align={"center"}>
                     {props.lines.map( id => <Justification key={id} id={id} settled={props.settled}/>)}
                 </Column>
             </Proof>
@@ -141,6 +139,7 @@ const msp = () => {
         }
 
         const lines = extract(initialProof.children)
+
 
         const firstGoal = lines.find( l => !state.sentences.find( s => s.id === l).justificationId )
         const firstGoalPosition = lines.findIndex(l=>l===firstGoal)

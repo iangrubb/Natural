@@ -5,7 +5,7 @@ import {colors, fonts} from '../styles'
 
 const Container = styled.div`
 
-    padding: 2px 0 0 0;
+    padding: 10px;
 
     display: flex;
     flex-direction: column;

@@ -15,6 +15,8 @@ export const colors = {
     availableBackground: '#42C2C9',
     currentGoalBackground: '#46E681',
 
+    pointer: 'red',
+
 
     
 

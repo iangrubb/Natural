@@ -26,36 +26,69 @@ const Container = styled.div`
 
     height: 28px;
     width: fit-content;
-    border-radius: 4px;
+    
 
     font-family: ${fonts.text}
 
-    margin: ${props => props.isAGoal ?'75px':'5px'} 40px 5px 5px;
-    padding: 4px 8px;
+    margin: ${props => props.isAGoal ?'75px':'5px'} 40px 5px ${props => props.highlighted ? "0" : "5"}px;
+    padding: 4px 8px 4px ${props => props.highlighted ? "3" : "8"}px;
 
     transition: margin 0.4s ease;
 
-    background: ${props => pickBackground(props.relevance)};
-    border: ${props => props.highlighted ? '4px solid #CECB02' : 'none'};
-
-    box-shadow: ${props => props.clickable ? `2px 2px 0 ${colors.darkSurface}` : "none"}
-
+    
+    border: 2px solid ${props => props.clickable ? ` ${colors.darkSurface}` : `${colors.lightSurface}`}
+    border-radius: 4px;
+    box-shadow: 3px 3px 0${props => props.clickable ? `${colors.mediumSurface}` : `${colors.lightSurface}`}
 
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+
+
+    ::before {
+        z-index: 2;
+
+        content:${props => props.highlighted ? "''" : 'none'};
+        position: relative;
+        right: ${props => 31 + (props.depth * 39 )}px;
+        height: 0;
+        width: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+  
+        border-left: 15px solid ${colors.pointer};
+    }
+
+    ::after {
+        content:${props => props.currentGoal ? "'(goal)'" : 'none'};
+        position: relative;
+        left: 30px;
+        width: 0;
+        color: red;
+        font-weight: 700;
+        font-family: ${fonts.display};
+
+    }
+
+
+
 `
+
+// background: ${props => pickBackground(props.relevance)};
+
+
 
 
 const Sentence = props => {
-    
     return (
         <Fade right>
             <Container 
+                currentGoal={props.currentGoal === props.id}
                 relevance={props.relevance}
                 clickable={props.clickable}
                 highlighted={props.highlighted}
                 isAGoal={props.isAGoal}
+                depth={props.depth}
                 onClick={props.clickable ? props.onClick(props.globalGoal, props.focus, props.sentence, props.options) : null}
             >
                 {display(props.sentence.content, true)}
@@ -102,8 +135,8 @@ const msp = () => {
             highlighted: state.highlightArray.includes(ownProps.id),
             clickable:
                 (!goal && !complete && !sentence.justificationId) ||
-                (rel === "goal" && goal && !focus && !ownProps.lemmaFlag && sentence.content.type !== "contradiction") ||
-                (rel === "available" && goal && !focus && !ownProps.lemmaFlag && sentence.content.type !== "atom" && sentence.content.type !== "atom")
+                (rel === "goal" && goal && !focus && !ownProps.lemmaFlag && sentence.content.type !== "contradiction" && state.highlightArray.length === 0) ||
+                (rel === "available" && goal && !focus && !ownProps.lemmaFlag && sentence.content.type !== "atom" && sentence.content.type !== "atom" && state.highlightArray.length === 0)
         }
     }
 }

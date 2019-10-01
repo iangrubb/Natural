@@ -7,6 +7,9 @@ import Button from '../userInterface/Button'
 import {colors, fonts} from '../styles'
 
 const Container = styled.div`
+
+    padding: 10px;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,7 +24,7 @@ const ButtonContainer = styled.div`
 
 const Instructions = styled.div`
 
-    padding: 2px 0 0 0;
+    padding: 4px;
 
     display: flex;
     flex-direction: column;
