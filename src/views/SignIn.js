@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 
+import { connect } from 'react-redux'
+
 import styled from 'styled-components'
 
 import {colors, fonts} from '../styles'
 
 import Button from '../userInterface/Button'
+
+import { signUpUser, logInUser } from '../actions'
 
 
 
@@ -150,10 +154,11 @@ const SignIn = props => {
         e.preventDefault()
         if (returning) {
             console.log("log in", username, password)
+            // use props.logInUser
         } else {
-            console.log("sign up", username, password)
+            props.signUpUser(username, password)
         }
-    } 
+    }
 
 
     return (
@@ -167,8 +172,6 @@ const SignIn = props => {
                     <SmallInfo>Password</SmallInfo>
                     <TextField type="text" name="password" value={password} onChange={e=>setPassword(e.target.value)} />
                     <Submit type="submit" value="Submit" onClick={submitData(username, password, returning)}/>
-
-
                 </Form>
                 <ContentRow>
                     {returning ? 
@@ -183,7 +186,11 @@ const SignIn = props => {
                 </ContentRow>
             </Window>
         </Page>
-    );
+    )
 }
 
-export default SignIn
+const mdp = dispatch => {
+    return {signUpUser: signUpUser(dispatch), logInUser: logInUser(dispatch)}
+  }
+  
+export default connect(null, mdp)(SignIn)

@@ -18,9 +18,9 @@ const defaultState = {
     maxStage: 0,
     messageQue: [],
     highlightArray: [],
-    exerciseData: []
+    exerciseData: [],
+    userInfo: null
 }
-
 
 
 const insertBeforeIn = (inserted, before, array) => {
@@ -243,6 +243,19 @@ const handleExerciseData = (state = defaultState.exerciseData, action) => {
     }
 }
 
+const handleUserInfo = (state = defaultState.userInfo, action) => {
+    switch (action.type) {
+        case "LOAD USER INFO":
+            return {username: action.username, proofs: action.proofs, success_ids: action.successes}
+        case "LOGOUT":
+            return null
+        default:
+            return state
+    }
+}
+
+
+
 
 const rootReducer = combineReducers({
     proofType: handleProofType,
@@ -260,7 +273,8 @@ const rootReducer = combineReducers({
     maxStage: handleMaxStage,
     messageQue: handleMessageQue,
     highlightArray: handleHighlightArray,
-    exerciseData: handleExerciseData
+    exerciseData: handleExerciseData,
+    userInfo: handleUserInfo,
 })
 
 export default rootReducer

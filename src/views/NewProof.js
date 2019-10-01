@@ -212,6 +212,10 @@ const msp = () => {
     }
 }
 
+
+// New plan: submti the proof, get the response (including the unique id), add to the user's array, and then load the proof
+
+
 const mdp = dispatch => {
     return {loadProof: (premises, conclusion, type, history) => () => loadProof(premises, conclusion, type, history, dispatch)}
 }

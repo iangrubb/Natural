@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components'
 
+import { connect } from 'react-redux'
+
 import { Link } from 'react-router-dom'
 
 import { colors } from '../styles'
@@ -109,9 +111,24 @@ const NavBar = props => {
             <Button to="/exercises">Exercises</Button>
 
         </Container>
-        <SignButton onClick={props.toggleSignIn}>SignIn</SignButton>
+        <SignButton onClick={()=> props.loggedIn ? props.logOut() : props.toggleSignIn()}>{props.loggedIn ? "SignOut" : "SignIn" }</SignButton>
         </Spacer>
     );
 }
 
-export default NavBar
+const msp = () => {
+    return state => {
+        
+        return {
+            loggedIn: state.userInfo
+        }
+    }
+}
+
+const mdp = dispatch => {
+    return {logOut: () => {
+        dispatch({type: "LOGOUT"})
+    }}
+}
+
+export default connect(msp, mdp)(NavBar)
