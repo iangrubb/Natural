@@ -488,6 +488,7 @@ const exerciseData = [
     ],
     proofs: [
         {premises: [
+            {type: "universal", variable: 1, right: {type:"universal", variable: 2, right: {type:"disjunction", left: {type:"atom", predicate:"R", terms:[1, 2]} , right: {type:"atom", predicate:"R", terms:[2, 1]}}}},
             {type: "universal", variable: 1, right: {type:"universal", variable: 2, right: {type:"conditional", left: {type:"atom", predicate:"R", terms:[1, 2]} , right: {type:"atom", predicate:"R", terms:[2, 1]}}}},
             {type: "universal", variable: 1, right: {type:"universal", variable: 2, right: {type:"universal", variable: 3 , right: {type: "conditional", left: {type: "conjunction", left: {type:"atom", predicate:"R", terms:[1, 2]}, right: {type:"atom", predicate:"R", terms:[2, 3]}} , right: {type:"atom", predicate:"R", terms:[1, 3]}}}}}
         ],conclusion:

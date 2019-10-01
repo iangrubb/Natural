@@ -13,6 +13,8 @@ const Container = styled.div`
     width: 84%;
     height: 90px;
 
+    margin: 8px 0;
+
     border-radius: 2px;
 
     background: ${colors.lightSurface};
@@ -43,7 +45,7 @@ const Label = styled.h2`
 
     font-size: ${props => props.size}em;
     text-align: center;
-    margin: 4px 0 0 0;
+    margin: 10px 0 0 0;
 
 `
 
@@ -51,7 +53,7 @@ const Goal = props => {
     return (
         <Container>
             {props.complete ?
-            <Label size={1.8}>Proof Complete!</Label> :
+            null :
             <>
                 <Label size={1}>Current Goal</Label>
                 <TextContainer>{props.goalSentence}</TextContainer>

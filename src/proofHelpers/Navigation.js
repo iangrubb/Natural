@@ -9,9 +9,11 @@ import {colors, fonts} from '../styles'
 
 const Container = styled.div`
     width: 84%;
-    height: 10%;
+    height: 70px;
 
     border-radius: 2px;
+
+    margin: 8px 0;
 
     background: ${colors.lightSurface};
     border: 12px solid ${colors.mediumSurface};
@@ -29,12 +31,20 @@ const Buttons = styled.div`
     align-items: center;
 `
 
+const Label = styled.h2`
+
+    font-size: ${props => props.size}em;
+    text-align: center;
+    margin: 10px 0 0 0;
+
+`
+
 const Navigation = props => {
     return (
         <Container>
-            <h4 style={{margin:'4px'}}>Navigate</h4>
+            <Label size={1}>Navigate</Label>
             <Buttons>
-                <Button text={"back"} active={props.back && !props.lemmaFlag && props.currentGoal && props.messageQue.length === 0} onClick={props.advance(props.state, props.stateRecord, props.stage - 1, true)}/>
+                <Button text={"back"} active={(props.back && !props.lemmaFlag && props.currentGoal && props.messageQue.length === 0)|| (props.finished && props.messageQue.length === 0)} onClick={props.advance(props.state, props.stateRecord, props.stage - 1, true)}/>
                 <Button text={"forward"} active={props.forward && !props.lemmaFlag && props.currentGoal && props.messageQue.length === 0} onClick={props.advance(props.state, props.stateRecord, props.stage + 1, false)}/>
             </Buttons>
         </Container>
@@ -45,7 +55,8 @@ const Navigation = props => {
 const msp = () => {
     return (state, ownProps) => {
         const timing = !state.currentFocus
-        return {state: state, ...state, forward: state.maxStage > state.stage && timing, back: state.stage > 0 && timing}
+        const finished = !state.sentences.find( s => !s.justificationId)
+        return {state: state, ...state, forward: state.maxStage > state.stage && timing, back: state.stage > 0 && timing, finished: finished}
     }
 }
 

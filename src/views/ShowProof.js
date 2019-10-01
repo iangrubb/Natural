@@ -94,9 +94,9 @@ const ShowProof = props => {
     return (
         <Page>
             <Interactions>
-                <Goal complete={!props.firstGoal && props.messageQue.length === 0} lemmaFlag={lemmaFlag}/>
                 <PromptContainer complete={!props.firstGoal && props.messageQue.length === 0} lemmaFlag={lemmaFlag} setLemmaFlag={setLemmaFlag} />
                 <Message complete={!props.firstGoal && props.messageQue.length === 0}/>
+                <Goal complete={!props.firstGoal && props.messageQue.length === 0} lemmaFlag={lemmaFlag}/>
                 <Navigation lemmaFlag={lemmaFlag} />
             </Interactions>
 

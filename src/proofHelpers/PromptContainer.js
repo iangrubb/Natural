@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import Instructions from '../prompts/Instructions'
 import Options from '../prompts/Options'
-import IntroChoice from '../prompts/IntroChoice'
 import ConstantChoice from '../prompts/ConstantChoice'
 
 import fill from '../helpers/fill'
@@ -18,9 +17,11 @@ import {colors, fonts} from '../styles'
 
 const Container = styled.div`
     width: 84%;
-    height: 28%;
+    height: 270px;
 
     border-radius: 2px;
+
+    margin: 8px 0;
 
     background: ${colors.lightSurface};
     border: 12px solid ${colors.mediumSurface};
@@ -40,6 +41,12 @@ const Alternative = styled.div`
     justify-content: center;
     align-items: center;
 
+    text-align: center;
+
+    font-size: 0.9em;
+
+    padding: 4px;
+
 `
 
 const ButtonRow = styled.div`
@@ -48,6 +55,16 @@ const ButtonRow = styled.div`
     align-items: center;
 `
 
+const Prompt = styled.div`
+
+`
+const Label = styled.h2`
+
+    font-size: ${props => props.size}em;
+    text-align: center;
+    margin: 10px 0 0 0;
+
+`
 
 
 const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, setLemmaFlag, messageQue) => {
@@ -58,7 +75,7 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
 
         return (
             <Options
-                instructions={messageQue[0].message}
+                cta={messageQue[0].message}
                 prompts={["ok"]}
                 actions={[
                     ()=>{
@@ -67,11 +84,6 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                     }
             ]}/>
         )
-
-
-        // Callback shifts array and unsets highlights
-
-
 
     } else if (!state.sentences.find(s=> !s.jusificationId)) {
         return null
@@ -86,13 +98,17 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
 
             // Intro Rules
             switch (focusSentence.content.type) {
+                case "atom":
+                    return <Instructions text="There's no normal introduction rule for proving an atomic sentence."/>
+
                 case "conjunction":
                     const foundLeft = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.left) && findAbove(goalSentence.id, s.id, state.proofs))
                     const foundRight = state.sentences.find( s => sentenceEquality(s.content, focusSentence.content.right) && findAbove(goalSentence.id, s.id, state.proofs))
                     
                     return (
                         <Options
-                            instructions={"Proving this conjunction will require proving both conjuncts."}
+                            instructions={"Proving this conjunction requires proving both conjuncts."}
+                            cta={"Add the conjuncts as new goals?"}
                             prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", foundLeft: foundLeft, foundRight: foundRight}, dispatch)}
@@ -104,7 +120,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
 
                     return (
                         <Options
-                            instructions={"Proving this disjunction requires proving one of its disjuncts. Which disjunct do you plan to prove?"}
+                            instructions={"Proving this disjunction requires proving one of its disjuncts."}
+                            cta={"Which disjunct do you want to add as a new goal?"}
                             prompts={["left", "right"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon", side: "left", found: disLeft}, dispatch)},
@@ -114,7 +131,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "conditional":
                     return (
                         <Options
-                            instructions={"Proving this conditional requires a proof of its consequent from its antecedent."}
+                            instructions={"Proving this conditional requires deriving its consequent from its antecedent."}
+                            cta={"Start a new subproof?"}
                             prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch)}
@@ -123,7 +141,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "negation":
                     return (
                         <Options
-                            instructions={"Proving this negation requires proving a proof of a contradiction from its opposite."}
+                            instructions={"Proving this negation requires deriving a contradiction from its opposite."}
+                            cta={"Start a new subproof?"}
                             prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch)}
@@ -131,13 +150,16 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                     )
                 case "existential":
                     return (
-                        <ConstantChoice instructions={"Proving this existential requires proving that the property it ascribes holds for some constant. What constant do you choose?"} constants={state.globalConstants}
+                        <ConstantChoice instructions="Proving this existential requires proving that the property it ascribes holds for some constant."
+                        cta="What constant is the property true of?" 
+                        constants={state.globalConstants}
                         onClick={constant => () => fill(state, goalSentence, focusSentence, {rule: "canon", constant: constant}, dispatch)}/>
                     )
                 case "universal":
                     return (
                         <Options
-                            instructions={"Proving this universal requires proving that an arbitrary object as the property ascribed."}
+                            instructions="Proving this universal requires proving that an arbitrary object has the property ascribed."
+                            cta="Start a new subproof?"
                             prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {rule: "canon"}, dispatch)}
@@ -154,7 +176,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "conjunction":
                     return (
                         <Options
-                            instructions={"This conjunction can be used to establish either conjunct. Which conjunct do you want to establish now?"}
+                            instructions="This conjunction can be used to prove either conjunct."
+                            cta="Which conjunct do you want to establish now?"
                             prompts={["left", "right"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {side: "left"}, dispatch)},
@@ -164,7 +187,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "conditional":
                     return (
                         <Options
-                        instructions={"This conditional allows you to use its consequent, as long as you can prove its antecedent."}
+                        instructions="This conditional allows you to derive its consequent, as long as you can prove its antecedent."
+                        cta="Add the consequent to proof?"
                         prompts={["confirm"]}
                         actions={[
                             ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
@@ -173,7 +197,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "disjunction":
                     return (
                         <Options
-                            instructions={"This disjunction allows you to establish the goal, as long as you can establish it from each disjunct."}
+                            instructions="This disjunction allows you to prove the goal by showing that it would follow from each of the disjuncts."
+                            cta="Start new subproofs?"
                             prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
@@ -182,7 +207,8 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                 case "negation":
                     return (
                         <Options
-                        instructions={"This negation allows you to derive a contradiction, as long as you can prove its opposite."}
+                        instructions="This negation allows you to derive a contradiction, as long as you can prove its opposite."
+                        cta="Add a contradiction to the proof?"
                         prompts={["confirm"]}
                         actions={[
                             ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
@@ -190,13 +216,16 @@ const choosePrompt = (state, goalSentence, focusSentence, dispatch, lemmaFlag, s
                     )
                 case "universal":
                     return (
-                        <ConstantChoice instructions={"This universal allows you to establish that the property it ascribes holds for a any constant. What constant do you choose?"} constants={state.globalConstants}
+                        <ConstantChoice instructions={"This universal allows you to prove that the property it ascribes holds for a constant."}
+                        cta="What constant do you you want to prove this for now?"
+                        constants={state.globalConstants}
                         onClick={constant => () => fill(state, goalSentence, focusSentence, {constant: constant}, dispatch)}/>
                     )
                 case "existential":
                     return (
                         <Options
-                            instructions={"This existential allows you to establish the goal, as long as you can establish it while assuming that an arbitrary object has the property it ascribes."}
+                            instructions={"This existential allows you to prove the goal by proving that the goal would follow from an arbitrary constant's having the property the existential ascribes."}
+                            cta="Start a new suproof?"
                             prompts={["confirm"]}
                             actions={[
                                 ()=>{fill(state, goalSentence, focusSentence, {}, dispatch)}
@@ -220,7 +249,7 @@ const PromptContainer = props => {
     return (
         <Container>
             {props.complete ? 
-            null :
+            <Label size={1.8}>Proof Complete!</Label> :
             <>
             {/* Main Prompt */}
             {props.choosePrompt(props.state, props.goalSentence, props.focusSentence, props.lemmaFlag, props.setLemmaFlag, props.messageQue)}
@@ -229,7 +258,7 @@ const PromptContainer = props => {
 
             {props.goalSentence && !props.lemmaFlag && !props.focusSentence && props.messageQue.length === 0 ?
                 <Alternative>
-                    <p>You may instead add a new lemma to the proof:</p>
+                    <Prompt>Instead, you may add a new lemma to the proof:</Prompt>
                     <Button minor={true} text={"lemma"} active={true} onClick={()=>props.setLemmaFlag(true)}/>
                 </Alternative>
             : null}
@@ -243,7 +272,7 @@ const PromptContainer = props => {
 
             {props.focusSentence && props.goalSentence.id === props.focusSentence.id ?
             <Alternative>
-                <p>You may instead use a special rule:</p>
+                <Prompt>Instead, you may use a special introduction rule:</Prompt>
                 <ButtonRow>
                     <Button minor={true} text="DNE" active={true} onClick={props.specialRule(props.state, props.goalSentence, props.focusSentence, "dne")} />
                     <Button minor={true} text="Reit" active={true}  onClick={props.specialRule(props.state, props.goalSentence, props.focusSentence, "reit")} />
@@ -251,10 +280,6 @@ const PromptContainer = props => {
                 </ButtonRow>
             </Alternative>
             : null }
-
-
-
-
 
 
 

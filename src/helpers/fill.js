@@ -341,7 +341,6 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
 
                 if (options.constant) {
                     constant = options.constant
-                    newNotification("That instantiation satisfies the previous goal!", [focusSentence.id, goalSentence.id])
                 } else {
                     constant = alphabet.find( l => !state.globalConstants.includes(l))
                     dispatch({type: "ADD CONSTANT", newConstant: constant})
@@ -351,6 +350,7 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
 
                 if (sentenceEquality(instantiation, goalSentence.content)) {
                     newJustification(goalSentence.id, "∀e", [focusSentence.id], dispatch)
+                    newNotification("That instantiation satisfies the previous goal!", [focusSentence.id, goalSentence.id])
                     setNextGoal(goalSentence.id)
                 } else {
                     const lineId = newSentence(instantiation, goalSentence.id, parentId, dispatch)

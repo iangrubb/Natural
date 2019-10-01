@@ -10,8 +10,6 @@ const Container = styled.div`
     margin: ${props => props.goal?'75px':'5px'} 0 10px 0;
     padding: 0 10px;
 
-    background: ${props => props.currentGoal ? 'yellow' : 'none'};
-
     border-radius: 2px;
 
     font-weight: 700;
@@ -22,9 +20,13 @@ const Container = styled.div`
 `
 
 const Justification = props => {
+
+    // On click temporarily removed, should be on hover
+    // onClick={props.click(props.citationIds)}
+
     return (
-        <Container goal={props.goal} currentGoal={props.currentGoal} onClick={props.click(props.citationIds)}>
-            {props.justification ? props.justification.type : "GOAL"}{props.citations.map(c => `, ${c}`)}
+        <Container goal={props.goal} currentGoal={props.currentGoal} >
+            {props.justification ? props.justification.type : null}{props.citations.map(c => `, ${c}`)}
         </Container>
     );
 }

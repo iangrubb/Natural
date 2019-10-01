@@ -5,9 +5,12 @@ import {colors, fonts} from '../styles'
 
 const Container = styled.div`
     width: 84%;
-    height: 32%;
+    max-height: calc(100% - 520px);
+    min-height: 100px;
 
     border-radius: 2px;
+
+    margin: 8px 0;
 
     background: ${colors.lightSurface};
     border: 12px solid ${colors.mediumSurface};
@@ -17,13 +20,20 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
 `
-const Title = styled.div`
-    height: 14%;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+const Content = styled.div`
+    width: 90%;
+    margin: 15px 0 15px 10px;
+    padding: 0 0 20px 0;
+
+    overflow: scroll;
+`
+
+const Label = styled.h2`
+
+    font-size: ${props => props.size}em;
+    text-align: center;
+    margin: 10px 0 0 0;
 
 `
 
@@ -33,9 +43,13 @@ const Message = props => {
             {props.complete ? 
             null :
             <>
-            <Title><h4 style={{margin:'4px'}}>Details</h4></Title>
+            <Label size={1}>Details</Label>
+            <Content>
+
+            </Content>
             </>
             }
+            
              
         </Container>
     );

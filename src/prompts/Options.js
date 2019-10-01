@@ -21,9 +21,22 @@ const ButtonContainer = styled.div`
 
 const Instructions = styled.div`
 
-    padding: 5%;
+    padding: 2px 0 0 0;
 
-    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    font-size: 0.9em;
+    font-weight: 400;
+
+`
+
+const CTA = styled.div`
+
+    padding: 4px;
 
     display: flex;
     flex-direction: column;
@@ -32,9 +45,8 @@ const Instructions = styled.div`
     text-align: center;
 
     font-size: 1em;
-    font-weight: 400;
+    font-weight: 700;
 
-    background: ${colors.lightSurface};
 `
 
 
@@ -42,6 +54,7 @@ const Options = props => {
     return (
         <Container>
             <Instructions>{props.instructions}</Instructions>
+            <CTA>{props.cta}</CTA>
             <ButtonContainer>
                 {props.prompts.map((p, idx) => <Button key={idx} text={p} active={true} onClick={props.actions[idx]}/>)}
             </ButtonContainer>
