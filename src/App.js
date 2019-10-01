@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
@@ -8,8 +8,8 @@ import NavBar from './views/NavBar'
 import ProofPage from './views/ProofPage'
 import Exercises from './views/Exercises'
 import Home from './views/Home'
-import Guide from './views/Guide'
 import NewProof from './views/NewProof'
+import SignIn from './views/SignIn'
 
 import { fetchExercises } from './actions'
 
@@ -26,14 +26,19 @@ const Site = styled.div`
 
 const App = props => {
 
+
+  const [signInFlag, setSignInFlag] = useState(false)
+
   useEffect(() => {
     props.fetchExercises()
   }, [])
 
+  const toggleSignIn = () => setSignInFlag(!signInFlag)
+
 
   return (
     <Site>
-      < NavBar />
+      < NavBar toggleSignIn={toggleSignIn}/>
       <Switch>
         <Route path="/newProof" component={NewProof} />
         <Route path="/proof" component={ProofPage} />
@@ -41,6 +46,8 @@ const App = props => {
         <Route path="/exercises" component={Exercises} />
         <Route path="/" component={Home} />
       </Switch>
+      {signInFlag ? <SignIn toggleSignIn={toggleSignIn}/> : null}
+
     </Site>
   )
 }
