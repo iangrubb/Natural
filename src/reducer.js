@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 
 
 const defaultState = {
+    proofId: null,
     proofType: null,
     proofs: [],
     sentences: [],
@@ -19,13 +20,25 @@ const defaultState = {
     messageQue: [],
     highlightArray: [],
     exerciseData: [],
-    userInfo: null
+    userInfo: null,
+    errorMessage: null,
 }
 
 
 const insertBeforeIn = (inserted, before, array) => {
     const position = array.indexOf(before)
     return [...array.slice(0, position), inserted, ...array.slice(position, array.length)]
+}
+
+
+// Need this for storing data about successes
+const handleProofId = (state = defaultState.proofId, action) => {
+    switch (action.type) {
+        case "SET PROOF ID":
+            return action.id
+        default:
+            return state
+    }
 }
 
 
@@ -246,18 +259,32 @@ const handleExerciseData = (state = defaultState.exerciseData, action) => {
 const handleUserInfo = (state = defaultState.userInfo, action) => {
     switch (action.type) {
         case "LOAD USER INFO":
-            return {username: action.username, proofs: action.proofs, success_ids: action.successes}
+            return {username: action.username, proofs: action.proofs, success_ids: action.successIds}
         case "LOGOUT":
             return null
+        case "SAVE NEW PROOF":
+            return {username: state.username, proofs: [...state.proofs, action.newProof], success_ids: state.success_ids}
+        case "SAVE SUCCESS":
+            return {username: state.username, proofs: state.proofs, success_ids: [...state.success_ids, action.id]}
+        default:
+            return state
+    }
+}
+
+const handleErrorMessage = (state = defaultState.errorMessage, action) => {
+    switch (action.type) {
+        case "UNSET ERROR MESSAGE":
+            return null
+        case "SET ERROR MESSAGE":
+            return action.message
         default:
             return state
     }
 }
 
 
-
-
 const rootReducer = combineReducers({
+    proofId: handleProofId,
     proofType: handleProofType,
     proofs: handleProofs,
     sentences: handleSentences,
@@ -275,6 +302,7 @@ const rootReducer = combineReducers({
     highlightArray: handleHighlightArray,
     exerciseData: handleExerciseData,
     userInfo: handleUserInfo,
+    errorMessage: handleErrorMessage
 })
 
 export default rootReducer

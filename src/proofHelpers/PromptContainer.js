@@ -17,6 +17,7 @@ import {colors, fonts} from '../styles'
 
 const Container = styled.div`
     width: 84%;
+    height: 300px;
 
     border-radius: 2px;
 

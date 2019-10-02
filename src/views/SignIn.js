@@ -40,6 +40,7 @@ const Window = styled.div`
     box-shadow: 4px 4px 0 ${colors.darkSurface};
 
     width: 70%;
+    max-width: 800px;
     height: 70%;
 
     display: flex;
@@ -53,7 +54,7 @@ const Title = styled.div`
 
     width: 80%;
 
-    font-size: 4vw;
+    font-size: 2.6em;
     font-weight: 700;
 
     color:${colors.darkText};
@@ -65,7 +66,7 @@ const Title = styled.div`
 const BigInfo = styled.div`
     width: 80%;
 
-    font-size: 2.4vw;
+    font-size: 1.6em;
     font-weight: 400;
 
     color:${colors.darkText};
@@ -90,12 +91,17 @@ const Form = styled.form`
 
 const SmallInfo = styled.div`
 
-    font-size: 1.8vw;
+    font-size: 1.2em;
     font-weight: 400;
-    
-    margin: 0 10px;
 
-    color:${colors.darkText};
+    height: 20px;
+    
+    margin: 0 15px;
+
+    color: ${props => props.color ? props.color : colors.darkText};
+
+    display:flex;
+    align-items:center;
 
 `
 
@@ -120,6 +126,7 @@ const Submit = styled.input`
     width: 100px;
     height: 36px;
 
+    margin: 20px 0 0 0;
     padding: 4px 0 0 0;
 
     background: ${colors.mediumSurface};
@@ -144,19 +151,28 @@ const SignIn = props => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
-    const toggleState = ()=>{
+
+    const clearState = () => {
         setUsername("")
         setPassword("")
-        setReturning(!returning)
+        props.clearErrorMessage()
+    }
+
+    const toggleState = ()=>{
+        clearState()
+        setReturning(!returning) 
     }
 
     const submitData = (username, password, returning) => e => {
         e.preventDefault()
-        if (returning) {
-            console.log("log in", username, password)
-            // use props.logInUser
-        } else {
-            props.signUpUser(username, password)
+        if (username !== "" && password !== "") {
+            if (returning) {
+                props.logInUser(username, password)
+                clearState()
+            } else {
+                props.signUpUser(username, password)
+                clearState()
+            }
         }
     }
 
@@ -170,18 +186,19 @@ const SignIn = props => {
                     <SmallInfo>Username</SmallInfo>
                     <TextField type="text" name="username" value={username} onChange={e=>setUsername(e.target.value)} />
                     <SmallInfo>Password</SmallInfo>
-                    <TextField type="text" name="password" value={password} onChange={e=>setPassword(e.target.value)} />
+                    <TextField type="password" name="password" value={password} onChange={e=>setPassword(e.target.value)} />
+                    <SmallInfo color="red" >{props.errorMessage ? props.errorMessage : " "}</SmallInfo>
                     <Submit type="submit" value="Submit" onClick={submitData(username, password, returning)}/>
                 </Form>
                 <ContentRow>
                     {returning ? 
                     <>
                     <SmallInfo>Need an account?</SmallInfo>
-                    <Button active={true} minor={true} text='signup' onClick={toggleState}/>
+                    <Button active={true} text='signup' onClick={toggleState}/>
                     </>:
                     <>
                     <SmallInfo>Have an account?</SmallInfo>
-                    <Button active={true} minor={true} text='login' onClick={toggleState}/>
+                    <Button active={true} text='login' onClick={toggleState}/>
                     </>}
                 </ContentRow>
             </Window>
@@ -189,8 +206,15 @@ const SignIn = props => {
     )
 }
 
+
+const msp = () => {
+    return state => {
+        return {...state}
+    }
+}
+
 const mdp = dispatch => {
-    return {signUpUser: signUpUser(dispatch), logInUser: logInUser(dispatch)}
+    return {signUpUser: signUpUser(dispatch), logInUser: logInUser(dispatch), clearErrorMessage: () => dispatch({type: "UNSET ERROR MESSAGE"})}
   }
   
-export default connect(null, mdp)(SignIn)
+export default connect(msp, mdp)(SignIn)

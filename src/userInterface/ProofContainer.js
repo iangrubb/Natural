@@ -89,6 +89,7 @@ const Rule = styled.div`
 `
 
 const ProofContainer = props => {
+
     return (
         <Category>
             <CategoryDetails>
@@ -100,7 +101,7 @@ const ProofContainer = props => {
                 </List>
             </CategoryDetails>
             <ProofList>
-                {props.proofs.map( p => <ProofCard key={p.proofId} {...p} />)}
+                {props.proofs.map( p => <ProofCard key={p.proofId} {...p} myProofId={p.proofId}/>)}
             </ProofList>
         </Category>
     );

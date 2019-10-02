@@ -5,6 +5,8 @@ import sentenceEquality from '../helpers/sentenceEquality'
 import substitute from '../helpers/substitute'
 import findAbove from '../helpers/findAbove'
 
+import { reportSuccess } from '../actions'
+
 const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w']
 
 const fill = (state, goalSentence, focusSentence, options, dispatch) => {
@@ -106,17 +108,29 @@ const fill = (state, goalSentence, focusSentence, options, dispatch) => {
         return { main: newId, sub: subGoalId }
     }
 
+
+    const newNotification = (message, ids) => dispatch({type: "PUSH", message: message, focusIds: ids})
+
+
     const setNextGoal = provenId => {
         const initialGoals = state.sentences.filter( s => !s.justificationId)
         const nextGoalId = initialGoals.find( g => g.id !== provenId)
         if (nextGoalId) {
             dispatch({type: "SET GOAL", newId: nextGoalId.id})
+            newNotification("You successfully completed your previous chain of goals. A new goal has been selected.", [nextGoalId.id])
         } else {
+            // When proof is complete
+            if (state.userInfo) {
+                if (!state.userInfo.success_ids.includes(state.proofId)) {
+                    dispatch({type: "SAVE SUCCESS", id: state.proofId})
+                    reportSuccess(state.proofId, state.userInfo.username)
+                }
+            }
             dispatch({type: "UNSET GOAL"})
         }
     }
 
-    const newNotification = (message, ids) => dispatch({type: "PUSH", message: message, focusIds: ids})
+    
 
 
 

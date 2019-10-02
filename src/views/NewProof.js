@@ -14,6 +14,8 @@ import Fade from 'react-reveal'
 import display from '../helpers/display'
 import loadProof from '../helpers/loadProof'
 
+import { processProofSubmission } from '../actions'
+
 
 
 const TypeChoice = styled.div`
@@ -113,7 +115,7 @@ const Proof = styled.div`
 
 
 const NewProof = props => {
-
+    
     const [type, setType] = useState(null)
     const [premises, setPremises] = useState([])
     const [conclusion, setConclusion] = useState([])
@@ -164,7 +166,7 @@ const NewProof = props => {
 
 
                     <ButtonRow>
-                        <Button text="submit" active={!adding && conclusion.length !== 0} onClick={props.loadProof(premises, conclusion[0], type, props.history)}/>
+                        <Button text="submit" active={!adding && conclusion.length !== 0} onClick={props.handleSubmission(premises, conclusion[0], type, (props.loggedIn ? props.userInfo.username : null), props.history, props.loggedIn)}/>
                         <Button text="cancel" active={!adding} onClick={()=>{
                             setType(null)
                             setPremises([])
@@ -208,16 +210,14 @@ const NewProof = props => {
 const msp = () => {
     return state => {
        
-        return {...state}
+        return {...state, loggedIn: state.userInfo}
     }
 }
 
 
-// New plan: submti the proof, get the response (including the unique id), add to the user's array, and then load the proof
-
 
 const mdp = dispatch => {
-    return {loadProof: (premises, conclusion, type, history) => () => loadProof(premises, conclusion, type, history, dispatch)}
+    return {handleSubmission: processProofSubmission(dispatch)}
 }
 
 export default withRouter(connect(msp, mdp)(NewProof))

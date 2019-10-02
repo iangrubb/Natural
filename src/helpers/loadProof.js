@@ -1,5 +1,5 @@
 
-const loadProof = (premises, conclusion, type, history, dispatch)=>{
+const loadProof = (premises, conclusion, type, history, dispatch, id)=>{
 
     const modifiedPremises = premises.map( (p, idx) => { return {id: (idx + 1) * 2 , content: p, justificationId: idx + 1} })
     const modifiedConclusion = {id: (premises.length + 1) * 2, content: conclusion}
@@ -36,6 +36,10 @@ const loadProof = (premises, conclusion, type, history, dispatch)=>{
     dispatch({type: "DISCARD STAGES", finalStage: 0})
     dispatch({type: "SET STAGE", stage: 0})
     dispatch({type: "SET MAX STAGE", maxStage: 0})
+
+    if (id) {
+        dispatch({type: "SET PROOF ID", id: id})
+    }
 
     history.push('./proof')
 

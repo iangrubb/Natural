@@ -45,6 +45,9 @@ const Container = styled.div`
     align-items: center;
 
 
+    color: ${props => props.irrelevant ? colors.dimText : colors.darkText}
+
+
     ::before {
         z-index: 2;
 
@@ -71,11 +74,7 @@ const Container = styled.div`
     }
 
 
-
 `
-
-// background: ${props => pickBackground(props.relevance)};
-
 
 
 
@@ -84,7 +83,7 @@ const Sentence = props => {
         <Fade right>
             <Container 
                 currentGoal={props.currentGoal === props.id}
-                relevance={props.relevance}
+                irrelevant={props.relevance === "none"}
                 clickable={props.clickable}
                 highlighted={props.highlighted}
                 isAGoal={props.isAGoal}

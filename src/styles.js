@@ -4,6 +4,7 @@ export const colors = {
 
     darkText: '#0A050A',
     lightText: '#EBEAEF',
+    dimText: '#555',
     highlightText: '#FCF926',
 
     darkSurface: '#18091B',
@@ -16,6 +17,8 @@ export const colors = {
     currentGoalBackground: '#46E681',
 
     pointer: 'red',
+
+    darkButton: '#241A2D',
 
 
     

@@ -46,12 +46,7 @@ const msp = () => {
 
         const firstInProof = selfIndex === 0
         
-        const firstAfterLine = parent.children.find( c => {
-
-            const child = state.sentences.find(s=> s.id === c)  
-
-            return !child.justificationId || (state.justifications.find(j=> j.id === child.justificationId).type !== "premise" && state.justifications.find(j=> j.id === child.justificationId).type !== "assumption" )
-        }).id === ownProps.id
+      
 
         const subproofEnd = parent.children[parent.children.length - 1] === ownProps.id
 
@@ -65,7 +60,7 @@ const msp = () => {
             goal: !sentence.justificationId,
             display: ownProps.firstGoalPosition < 0 || ownProps.firstGoalPosition > ownProps.order - 1,
             subproofEnd: subproofEnd,
-            spacing: 10 + (firstInProof ? 10 : 0) + (firstAfterLine ? 6 : 0) + (isGoal ? 75 : 0)}
+            spacing: 10 + (firstInProof ? 10 : 0) + (isGoal ? 70 : 0)}
     }
 }
 

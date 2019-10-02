@@ -33,7 +33,10 @@ const App = props => {
     props.fetchExercises()
   }, [])
 
-  const toggleSignIn = () => setSignInFlag(!signInFlag)
+  const toggleSignIn = () => {
+    setSignInFlag(!signInFlag)
+    props.clearErrorMessage()
+  }
 
 
   return (
@@ -53,7 +56,7 @@ const App = props => {
 }
 
 const mdp = dispatch => {
-  return {fetchExercises: fetchExercises(dispatch)}
+  return {fetchExercises: fetchExercises(dispatch), clearErrorMessage: () => dispatch({type: "UNSET ERROR MESSAGE"})}
 }
 
 export default connect(null, mdp)(App)

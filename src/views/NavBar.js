@@ -105,13 +105,13 @@ const NavBar = props => {
             <Title>Natural</Title>
 
             <Button to="/home">Home</Button>
-            <Button to="/proof">Proof</Button>
-            <Button to="/newProof">New</Button>
+            <Button to="/proof">Current Proof</Button>
+            <Button to="/newProof">New Proof</Button>
             {/* <Button to="/guide">Guide</Button> */}
             <Button to="/exercises">Exercises</Button>
 
         </Container>
-        <SignButton onClick={()=> props.loggedIn ? props.logOut() : props.toggleSignIn()}>{props.loggedIn ? "SignOut" : "SignIn" }</SignButton>
+        <SignButton onClick={()=> props.loggedIn ? props.logOut() : props.toggleSignIn()}>{props.loggedIn ? "Signout" : "Signin" }</SignButton>
         </Spacer>
     );
 }

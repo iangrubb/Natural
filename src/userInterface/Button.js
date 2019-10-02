@@ -14,7 +14,7 @@ const Container = styled.div`
 
     box-shadow: ${props => props.active ? `3px 3px 0 ${colors.highlightText}` : 'none'};
 
-    background: ${props => props.active ? colors.darkSurface : '#aaa'};
+    background: ${props => props.active ? colors.darkButton : '#aaa'};
     color: ${props => props.active ? colors.highlightText : '#999'};
 
     transform: ${props => props.active ? 'translateY(-2px)' : 'none'};
