@@ -32,14 +32,14 @@ const display = (content, main) => {
             if (content.letter) {
                 return <Part >{content.letter}</Part>
             } else {
-                return <><Part>{content.predicate}</Part>{ content.terms.map( t => {
+                return <Part>{content.predicate}{ content.terms.map( t => {
                     if (typeof t === 'string') {
                         return <Part size={0.9}>{t}</Part>
                     } else {
                         return variableDisplay(t)
                     }
                 })}                
-                </>
+                </Part>
             }
         case "universal":
             return <Part>  <Part bold={true} size={1.2}>∀</Part>  {variableDisplay(content.variable)}  {display(content.right, false)}</Part>

@@ -44,10 +44,10 @@ const App = props => {
       < NavBar toggleSignIn={toggleSignIn}/>
       <Switch>
         <Route path="/newProof" component={NewProof} />
-        <Route path="/proof" component={ProofPage} />
+        <Route path="/proof" component={props.loadedProof ? ProofPage : Home} />
         {/* <Route path="/guide" component={Guide} /> */}
         <Route path="/exercises" component={Exercises} />
-        <Route path="/" component={Home} />
+        <Route path="/" render={() => <Home toggleSignIn={toggleSignIn}/>} />
       </Switch>
       {signInFlag ? <SignIn toggleSignIn={toggleSignIn}/> : null}
 
@@ -55,8 +55,17 @@ const App = props => {
   )
 }
 
+
+const msp = () => {
+  return state => {
+      return {
+          loadedProof: state.proofType
+      }
+  }
+}
+
 const mdp = dispatch => {
   return {fetchExercises: fetchExercises(dispatch), clearErrorMessage: () => dispatch({type: "UNSET ERROR MESSAGE"})}
 }
 
-export default connect(null, mdp)(App)
+export default connect(msp, mdp)(App)

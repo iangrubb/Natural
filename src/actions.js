@@ -13,7 +13,7 @@ const fetchExercises = dispatch => {
 }
 
 const signUpUser = dispatch => {
-    return (username, password) => {
+    return (username, password, toggle) => {
         const signupConfig = {
             method: "POST",
             body: JSON.stringify({username: username, password: password}),
@@ -28,6 +28,7 @@ const signUpUser = dispatch => {
             if (data.errors) {
                 dispatch({type: "SET ERROR MESSAGE", message: data.errors})
             } else {
+                toggle()
                 dispatch({type: "LOAD USER INFO", username: data.data.attributes.username, proofs: [], successIds: data.data.attributes.success_ids})
             }
         })
@@ -35,7 +36,7 @@ const signUpUser = dispatch => {
 }
 
 const logInUser = dispatch => {
-    return (username, password) => {
+    return (username, password, toggle) => {
         const signupConfig = {
             method: "POST",
             body: JSON.stringify({username: username, password: password}),
@@ -58,6 +59,7 @@ const logInUser = dispatch => {
                         premises: p.premises
                     }
                 })
+                toggle()
                 dispatch({type: "LOAD USER INFO", username: data.data.attributes.username, proofs: processedProofs, successIds: data.data.attributes.success_ids})
             }
         })

@@ -167,10 +167,10 @@ const SignIn = props => {
         e.preventDefault()
         if (username !== "" && password !== "") {
             if (returning) {
-                props.logInUser(username, password)
+                props.logInUser(username, password, props.toggleSignIn)
                 clearState()
             } else {
-                props.signUpUser(username, password)
+                props.signUpUser(username, password, props.toggleSignIn)
                 clearState()
             }
         }

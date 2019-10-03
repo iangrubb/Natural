@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 const Container = styled.div`
-    height: 40px;
+    min-height: 40px;
     
 
-    margin: ${props => props.spacing}px 0 ${props => props.subproofEnd ? '12' : '0'}px 0;
+    margin: ${props => props.topSpacing}px 0 ${props => props.bottomSpacing}px 0;
     padding: 0 10px;
 
     border-radius: 2px;
@@ -25,7 +25,7 @@ const Justification = props => {
     // onClick={props.click(props.citationIds)}
 
     return (
-        <Container subproofEnd={props.subproofEnd} spacing={props.spacing} goal={props.goal} currentGoal={props.currentGoal} >
+        <Container bottomSpacing={props.bottomSpacing} topSpacing={props.topSpacing} goal={props.goal} currentGoal={props.currentGoal} >
             {props.justification ? props.justification.type : null}{props.citations.map(c => `, ${c}`)}
         </Container>
     );
@@ -56,6 +56,8 @@ const msp = () => {
             citations = []
         }
 
+        const sentence = sent
+
         const parent = state.proofs.find( p => p.children.includes(ownProps.id))
         
         const selfIndex = parent.children.indexOf(ownProps.id)
@@ -67,8 +69,7 @@ const msp = () => {
 
         const isGoal = !sent.justificationId
 
-
-
+        const lastPremise = (just && (just.type === "Premise" || just.type === "Assumption")) && (parent.children[selfIndex + 1] % 2 === 1 || !state.sentences.find( e => e.id === parent.children[selfIndex + 1]).justificationId || ( state.justifications.find( j => j.id === state.sentences.find( e => e.id === parent.children[selfIndex + 1]).justificationId).type !== "Premise" && state.justifications.find( j => j.id === state.sentences.find( e => e.id === parent.children[selfIndex + 1]).justificationId).type !== "Assumption" ))
 
 
 
@@ -78,7 +79,8 @@ const msp = () => {
             currentGoal: state.currentGoal === ownProps.id,
             citations: citations,
             subproofEnd: subproofEnd,
-            spacing: 10 + (firstInProof ? 10 : 0) + (isGoal ? 70 : 0)
+            bottomSpacing: (subproofEnd ? 12 : 0) + (lastPremise ? 6 : 0),
+            topSpacing: 10 + (firstInProof ? 6 : 0) + (isGoal ? 70 : 0)
         }
     }
 }

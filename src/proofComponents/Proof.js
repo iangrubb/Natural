@@ -12,7 +12,6 @@ import Sentence from './Sentence';
 
 const Container = styled.div`
 
-    border: ${props => props.highlighted ? '2px solid #CECB02' : 'none'};
 
     margin: 4px 0 4px ${props => props.depth===1? '0': '30'}px;
 

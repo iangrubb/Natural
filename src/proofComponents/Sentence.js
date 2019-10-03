@@ -35,6 +35,7 @@ const Container = styled.div`
 
     transition: margin 0.4s ease;
 
+    cursor: ${props => props.clickable ? 'pointer' : 'default'};
     
     border: 2px solid ${props => props.clickable ? ` ${colors.darkSurface}` : `${colors.lightSurface}`}
     border-radius: 4px;
@@ -45,7 +46,7 @@ const Container = styled.div`
     align-items: center;
 
 
-    color: ${props => props.irrelevant ? colors.dimText : colors.darkText}
+    color: ${colors.darkText};
 
 
     ::before {

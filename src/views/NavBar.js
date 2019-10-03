@@ -66,6 +66,8 @@ const Button = styled(Link)`
 `
 
 const SignButton = styled.div`
+
+    cursor: pointer;
     
     font-size: 1.2em;
     font-weight: 700;
@@ -105,10 +107,10 @@ const NavBar = props => {
             <Title>Natural</Title>
 
             <Button to="/home">Home</Button>
-            <Button to="/proof">Current Proof</Button>
             <Button to="/newProof">New Proof</Button>
             {/* <Button to="/guide">Guide</Button> */}
             <Button to="/exercises">Exercises</Button>
+            {props.loadedProof ? <Button to="/proof">Current Proof</Button> : null}
 
         </Container>
         <SignButton onClick={()=> props.loggedIn ? props.logOut() : props.toggleSignIn()}>{props.loggedIn ? "Signout" : "Signin" }</SignButton>
@@ -118,9 +120,9 @@ const NavBar = props => {
 
 const msp = () => {
     return state => {
-        
         return {
-            loggedIn: state.userInfo
+            loggedIn: state.userInfo,
+            loadedProof: state.proofType
         }
     }
 }

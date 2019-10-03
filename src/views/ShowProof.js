@@ -103,13 +103,13 @@ const ShowProof = props => {
             <ProofColumn>
 
             <Proof lemmaFlag={lemmaFlag} >
-                <Column shift={0} width={60} align={"center"}>
+                <Column shift={props.spacing} width={60} align={"center"}>
                     {props.lines.map( (id, idx) => <Counter key={id} id={id} order={idx + 1} firstGoalPosition={props.firstGoalPosition}/>)}
                 </Column>
                 <Column shift={0} width={240} align={"flex-start"}>
                     <ProofR key={1} id={1} lemmaFlag={lemmaFlag}/>
                 </Column>
-                <Column shift={0} width={140} align={"center"}>
+                <Column shift={props.spacing} width={140} align={"center"}>
                     {props.lines.map( id => <Justification key={id} id={id} settled={props.settled}/>)}
                 </Column>
             </Proof>
@@ -146,13 +146,22 @@ const msp = () => {
         const firstGoalPosition = lines.findIndex(l=>l===firstGoal)
 
 
+        const firstLine = state.sentences.find( s => s.id === lines[0])
+        const noPremises = !firstLine.justificationId || (state.justifications.find( j => j.id === firstLine.justificationId).type !== "Premise" && state.justifications.find( j => j.id === firstLine.justificationId).type !== "Assumption")
+        
+        const subStart = initialProof.children[0] % 2 === 1
+
+        const spacing = (noPremises ? 6 : 0) + (subStart ? 12 : 0)
+        
+
         return {...state,
             state: state,
             lines: lines.flat(Infinity),
             firstGoal: firstGoal,
             firstGoalPosition: firstGoalPosition,
             goalSentence: state.sentences.find( s => s.id === state.currentGoal),
-            settled: lines.slice(0, firstGoalPosition)
+            settled: lines.slice(0, firstGoalPosition),
+            spacing: spacing
         }
     }
 }

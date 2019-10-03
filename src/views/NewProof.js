@@ -12,7 +12,6 @@ import Button from '../userInterface/Button'
 import Fade from 'react-reveal'
 
 import display from '../helpers/display'
-import loadProof from '../helpers/loadProof'
 
 import { processProofSubmission } from '../actions'
 
@@ -142,7 +141,7 @@ const NewProof = props => {
                     {premises.map( (p, idx) => {
                         return (
                             <LineRow >
-                                <Info >{display(p)}</Info>
+                                <Info >{display(p, true)}</Info>
                                 <Button text="X" minor={true} active={!adding} onClick={remove(idx)} />
                             </LineRow>
                         )})

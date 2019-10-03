@@ -5,6 +5,8 @@ import { colors } from '../styles'
 
 const Container = styled.div`
 
+    cursor: pointer;
+
     margin: 6px 4px;
     padding: ${props => props.minor ? '4px' : '6px'};
 

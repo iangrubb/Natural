@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const colors = {
 
     darkText: '#0A050A',
+    mediumText: '#544554',
     lightText: '#EBEAEF',
     dimText: '#555',
     highlightText: '#FCF926',

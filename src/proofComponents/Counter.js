@@ -5,9 +5,9 @@ import styled from 'styled-components'
 
 const Container = styled.div`
     width: 40px;
-    height: 40px;
+    min-height: 40px;
 
-    margin: ${props => props.spacing}px 0 ${props => props.subproofEnd ? '12' : '0'}px 0;
+    margin: ${props => props.topSpacing}px 0 ${props => props.bottomSpacing}px 0;
     font-weight: 700;
     font-size: 1.4em;
 
@@ -21,7 +21,7 @@ const Container = styled.div`
 
 const Counter = props => {
     return (
-        <Container subproofEnd={props.subproofEnd} spacing={props.spacing} goal={props.goal} dark={props.display}>
+        <Container  bottomSpacing={props.bottomSpacing} topSpacing={props.topSpacing} goal={props.goal} dark={props.display}>
            {props.display ? props.order : '?'}
         </Container>
     );
@@ -37,8 +37,6 @@ const msp = () => {
         const selfIndex = parent.children.indexOf(ownProps.id)
 
 
-
-
         const just = state.justifications.find( j => j.id === sentence.justificationId )
         const premise = just && (just.type === "premise" || just.type === "assumption")
 
@@ -46,12 +44,13 @@ const msp = () => {
 
         const firstInProof = selfIndex === 0
         
-      
-
         const subproofEnd = parent.children[parent.children.length - 1] === ownProps.id
 
 
         const isGoal = !sentence.justificationId
+
+        const lastPremise = (just && (just.type === "Premise" || just.type === "Assumption")) && (parent.children[selfIndex + 1] % 2 === 1 || !state.sentences.find( e => e.id === parent.children[selfIndex + 1]).justificationId || ( state.justifications.find( j => j.id === state.sentences.find( e => e.id === parent.children[selfIndex + 1]).justificationId).type !== "Premise" && state.justifications.find( j => j.id === state.sentences.find( e => e.id === parent.children[selfIndex + 1]).justificationId).type !== "Assumption" ))
+       
 
 
 
@@ -59,8 +58,9 @@ const msp = () => {
         return {...state,
             goal: !sentence.justificationId,
             display: ownProps.firstGoalPosition < 0 || ownProps.firstGoalPosition > ownProps.order - 1,
-            subproofEnd: subproofEnd,
-            spacing: 10 + (firstInProof ? 10 : 0) + (isGoal ? 70 : 0)}
+            bottomSpacing: (subproofEnd ? 12 : 0) + (lastPremise ? 6 : 0),
+            topSpacing: 10 + (firstInProof ? 6 : 0) + (isGoal ? 70 : 0)
+        }
     }
 }
 
