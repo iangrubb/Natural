@@ -91,7 +91,8 @@ const Gap = styled.div`
     background: ${colors.mediumSurface};
     border-radius: 2px;
 
-    border: ${props=> props.active ? `dashed 2px ${colors.darkSurface}` : "none"}
+    border: ${props=> props.active ? `dashed 2px ${colors.darkSurface}` : "none"};
+
 
 `
 
@@ -99,15 +100,18 @@ const Part = styled.div`
 
     font-family: ${fonts.text};
 
+    margin: 0 1px;
+
     display: flex;
     align-items: center;
 
-    font-weight: ${props=> props.bold ? '700' : '400'}
-    font-size: ${props=> props.size ? `${props.size}` : '1'}em
+    font-weight: ${props=> props.bold ? '700' : '400'};
+    font-size: ${props=> props.size ? `${props.size}` : '1'}em;
 
-    transform: translateY(${props=> props.sub ? '4px' : '0px'})
+    transform: translateY(${props=> props.sub ? '4px' : '0px'});
 
-    border: ${props=> props.active ? "dashed 2px #333" : "none"}
+    border: ${props=> props.active ? "dashed 2px #333" : "none"};
+
 `
 
 
@@ -148,7 +152,7 @@ const SentenceForm = props => {
                 setSentences([...remainder, updated])
                 setFocus(null)
             } else {
-                if (target.type === "gap") {
+                if (target.type !== "atom") {
                     const updated = {id: target.id, type: "atom", predicate: value.toUpperCase() , terms: []}
                     setSentences([...remainder, updated])
                 } else {
@@ -205,14 +209,40 @@ const SentenceForm = props => {
         setCounter(1)
     }
 
+
+    const partialTree = (sentence) => {
+
+        if (sentence.type === "conditional" || sentence.type === "conjunction" || sentence.type === "disjunction") {
+            const left = sentences.find( s => s.id === sentence.left)
+            const right = sentences.find( s => s.id === sentence.right)
+            const leftTree = partialTree(left)
+            const rightTree = partialTree(right)
+            return [sentence.id, ...leftTree, ...rightTree]
+        } else if (sentence.type === "negation" || sentence.type === "universal" || sentence.type === "existential") {
+            const right = sentences.find( s => s.id === sentence.right)
+            const rightTree = partialTree(right)
+            return [sentence.id, ...rightTree]
+        } else {
+            return [sentence.id]
+        }
+
+    }
+
     
     const update = type => () => {
 
         const target = sentences.find( s => s.id === focus)
-        const remainder = sentences.filter( s => s.id !== focus)
 
 
-        if (target && target.type === "gap") {
+        if (target) {
+
+            const initialRemainder = sentences.filter( s => s.id !== focus)
+
+            const remove = target.type === "gap" ? [] : partialTree(target)
+
+            console.log(remove)
+
+            const remainder = initialRemainder.filter( s => !remove.includes(s.id))
 
             if (type === "conditional" || type === "conjunction" || type === "disjunction") {
 
@@ -246,17 +276,22 @@ const SentenceForm = props => {
     }
 
 
+    const selectPart = content => e => {
+        e.stopPropagation()
+        setFocus(content.id)
+    }
+
+
     const display = (content, main) => {
     
         switch (content.type){
             case "gap":
-                return <Gap active={content.id === focus} onClick={()=>setFocus(content.id)}></Gap>
-
+                return <Gap active={content.id === focus} onClick={selectPart(content)}></Gap>
             case "atom":
                 if (content.letter) {
-                    return <Part active={content.id === focus}>{content.letter}</Part>
+                    return <Part active={content.id === focus} onClick={selectPart(content)}>{content.letter}</Part>
                 } else {
-                    return <Part active={content.id === focus}><Part>{content.predicate}</Part>{ content.terms.map( t => {
+                    return <Part active={content.id === focus} onClick={selectPart(content)}><Part>{content.predicate}</Part>{ content.terms.map( t => {
                         if (typeof t === 'string') {
                             return <Part size={0.9}>{t}</Part>
                         } else {
@@ -266,37 +301,37 @@ const SentenceForm = props => {
                     </Part>
                 }
             case "universal":
-                return <Part active={content.id === focus}>  <Part bold={true} size={1.2}>∀</Part>  {variableDisplay(content.variable)}  {display(sentences.find( s => s.id === content.right), false)}</Part>
+                return <Part onClick={selectPart(content)}>  <Part active={content.id === focus} bold={true} size={1.2}>∀</Part>  {variableDisplay(content.variable)}  {display(sentences.find( s => s.id === content.right), false)}</Part>
             case "existential":
-                return <Part active={content.id === focus}>  <Part bold={true} size={1.2}>∃</Part>  {variableDisplay(content.variable)}  {display(sentences.find( s => s.id === content.right), false)}</Part>
+                return <Part onClick={selectPart(content)}>  <Part active={content.id === focus} bold={true} size={1.2}>∃</Part>  {variableDisplay(content.variable)}  {display(sentences.find( s => s.id === content.right), false)}</Part>
             case "negation":
-                return <Part active={content.id === focus}>¬{display(sentences.find( s => s.id === content.right), false)}</Part>
+                return <Part onClick={selectPart(content)}><Part active={content.id === focus}>¬</Part>{display(sentences.find( s => s.id === content.right), false)}</Part>
             case "conjunction":
                 return (
-                    <Part active={content.id === focus}>
+                    <Part  onClick={selectPart(content)}>
                         {main ? null : '('}
                         {display(sentences.find( s => s.id === content.left), false)}
-                        {' & '}
+                        <Part active={content.id === focus}>{' & '}</Part>
                         {display(sentences.find( s => s.id === content.right), false)}
                         {main ? null : ')'}
                     </Part>
                     )
             case "disjunction":
                 return (
-                    <Part active={content.id === focus}>
+                    <Part onClick={selectPart(content)}>
                         {main ? null : '('}
                         {display(sentences.find( s => s.id === content.left), false)}
-                        {' ∨ '}
+                        <Part active={content.id === focus}>{' ∨ '}</Part>
                         {display(sentences.find( s => s.id === content.right), false)}
                         {main ? null : ')'}
                     </Part>
                     )
             case "conditional":
                 return (
-                    <Part active={content.id === focus}>
+                    <Part onClick={selectPart(content)}>
                         {main ? null : '('}
                         {display(sentences.find( s => s.id === content.left), false)}
-                        {' → '}
+                        <Part active={content.id === focus}>{' → '}</Part>
                         {display(sentences.find( s => s.id === content.right), false)}
                         {main ? null : ')'}
                     </Part>
