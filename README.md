@@ -1,68 +1,27 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Natural
 
-## Available Scripts
+A virtual tutor for natural deduction proofs.
 
-In the project directory, you can run:
+## Motivation
 
-### `npm start`
+For students in their first course in formal logic, the hardest challenge is often the construcion of natural deduction proofs. The challenge is twofold: the syntax involved in natural deduction proof rules can be intimidating and the strategy required for combining these rules in the right way can be initially unintuitive. Unfortunately, many students get hung up on the syntax, so they don't get a chance to develop an understanding of the strategy involved in proof construction or an appreciation of what natural deduction proofs are all about.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Natural is a proof-construction program that handles the syntax so that students can focus on proof-construction strategies. Students respond to prompts in order to tell the program what they want to add to the proof at any given stage in proof construction, and then the program takes care of the syntactical details involved in implementing the requested additions. The remaining challenge for students is to request the right additions in the right order so that they can successfuly complete the proof.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Full support for constructing proofs in propositional or predicate logic.
+* Collection of practice proofs to choose from, organized by difficulty and required rules.
+* Proof submission form for starting new proofs.
+* User accounts to save submitted proofs and track successful proof completion.
 
-### `npm run build`
+## Tech
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+* React
+* Redux
+* Redux Thunk
+* React Router
+* Styled Components
+* React Reveal
+* Rails API Back End ([repo](https://github.com/iangrubb/natural_api))
