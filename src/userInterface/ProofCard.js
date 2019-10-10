@@ -113,8 +113,6 @@ const ProofCard = props => {
 const msp = () => {
     
     return (state, ownProps) => {
-        console.log('state', state)
-        console.log('props', ownProps)
 
         return {...state, complete: state.userInfo && ownProps.myProofId && state.userInfo.success_ids.includes(ownProps.myProofId)}
     }

@@ -240,8 +240,6 @@ const SentenceForm = props => {
 
             const remove = target.type === "gap" ? [] : partialTree(target)
 
-            console.log(remove)
-
             const remainder = initialRemainder.filter( s => !remove.includes(s.id))
 
             if (type === "conditional" || type === "conjunction" || type === "disjunction") {

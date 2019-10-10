@@ -86,8 +86,6 @@ const FormContainer = styled.div`
 
 const ShowProof = props => {
 
-    console.log(props)
-
     const [lemmaFlag, setLemmaFlag] = useState(false)
 
     return (

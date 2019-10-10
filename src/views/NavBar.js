@@ -113,7 +113,7 @@ const NavBar = props => {
             {props.loadedProof ? <Button to="/proof">Current Proof</Button> : null}
 
         </Container>
-        <SignButton onClick={()=> props.loggedIn ? props.logOut() : props.toggleSignIn()}>{props.loggedIn ? "Signout" : "Signin" }</SignButton>
+        <SignButton onClick={()=> props.loggedIn ? props.logOut() : props.toggleSignIn()}>{props.loggedIn ? "Sign Out" : "Sign In" }</SignButton>
         </Spacer>
     );
 }
@@ -129,6 +129,7 @@ const msp = () => {
 
 const mdp = dispatch => {
     return {logOut: () => {
+        localStorage.removeItem('token')
         dispatch({type: "LOGOUT"})
     }}
 }

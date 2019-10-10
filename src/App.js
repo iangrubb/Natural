@@ -11,7 +11,7 @@ import Home from './views/Home'
 import NewProof from './views/NewProof'
 import SignIn from './views/SignIn'
 
-import { fetchExercises } from './actions'
+import { fetchExercises, attemptAutoLogin } from './actions'
 
 const Site = styled.div`
   width: 100vw;
@@ -27,16 +27,24 @@ const Site = styled.div`
 const App = props => {
 
 
-  const [signInFlag, setSignInFlag] = useState(false)
+  
 
-  useEffect(() => {
-    props.fetchExercises()
-  }, [])
+  const [signInFlag, setSignInFlag] = useState(false)
 
   const toggleSignIn = () => {
     setSignInFlag(!signInFlag)
     props.clearErrorMessage()
   }
+
+  useEffect(() => {
+    props.fetchExercises()
+    const token = localStorage.getItem('token')
+    if (token) {
+      props.attemptAutoLogin(token, toggleSignIn)
+    }
+  }, [])
+
+
 
 
   return (
@@ -59,13 +67,19 @@ const App = props => {
 const msp = () => {
   return state => {
       return {
-          loadedProof: state.proofType
+          loadedProof: state.proofType,
+          loggedIn: !!state.userInfo
       }
   }
 }
 
 const mdp = dispatch => {
-  return {fetchExercises: fetchExercises(dispatch), clearErrorMessage: () => dispatch({type: "UNSET ERROR MESSAGE"})}
+  return {
+    fetchExercises: fetchExercises(dispatch),
+    clearErrorMessage: () => dispatch({type: "UNSET ERROR MESSAGE"}),
+    attemptAutoLogin: attemptAutoLogin(dispatch)
+
+}
 }
 
 export default connect(msp, mdp)(App)

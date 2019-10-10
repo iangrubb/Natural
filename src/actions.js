@@ -29,6 +29,7 @@ const signUpUser = dispatch => {
                 dispatch({type: "SET ERROR MESSAGE", message: data.errors})
             } else {
                 toggle()
+                localStorage.setItem('token', data.data.attributes.token)
                 dispatch({type: "LOAD USER INFO", username: data.data.attributes.username, proofs: [], successIds: data.data.attributes.success_ids})
             }
         })
@@ -59,6 +60,7 @@ const logInUser = dispatch => {
                         premises: p.premises
                     }
                 })
+                localStorage.setItem('token', data.data.attributes.token)
                 toggle()
                 dispatch({type: "LOAD USER INFO", username: data.data.attributes.username, proofs: processedProofs, successIds: data.data.attributes.success_ids})
             }
@@ -67,8 +69,24 @@ const logInUser = dispatch => {
 }
 
 
-const autoLogIn = dispatch => {
-    return () => {
+const attemptAutoLogin = dispatch => {
+    return token => {
+        fetch(`${URL}/autologin`, {headers: {Authorization: token}, 'accept': 'application/json'})
+        .then(resp => resp.json())
+        .then(data => {
+            console.log("fetched this:", data)
+            if (!data.errors) {
+                const processedProofs = data.data.attributes.proof_data.map( p => {
+                    return {
+                        proofId: p.id,
+                        type: p.type,
+                        conclusion: p.conclusion,
+                        premises: p.premises
+                    }
+                })
+                dispatch({type: "LOAD USER INFO", username: data.data.attributes.username, proofs: processedProofs, successIds: data.data.attributes.success_ids})
+            }
+        })
 
 
     }
@@ -122,4 +140,4 @@ const reportSuccess = (proofId, username) => {
 }
 
 
-export { fetchExercises, signUpUser, logInUser, autoLogIn, processProofSubmission, reportSuccess }
+export { fetchExercises, signUpUser, logInUser, attemptAutoLogin, processProofSubmission, reportSuccess }
