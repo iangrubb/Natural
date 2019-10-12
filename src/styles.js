@@ -6,7 +6,7 @@ export const colors = {
     mediumText: '#544554',
     lightText: '#EBEAEF',
     dimText: '#555',
-    highlightText: '#FCF926',
+    highlightText: '#FCFA6A',
 
     darkSurface: '#18091B',
     mediumSurface: '#A49FAD',
@@ -19,7 +19,7 @@ export const colors = {
 
     pointer: 'red',
 
-    darkButton: '#241A2D',
+    darkButton: '#3D2842',
 
 
     

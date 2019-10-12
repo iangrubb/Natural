@@ -8,11 +8,11 @@ const Container = styled.div`
     cursor: pointer;
 
     margin: 6px 4px;
-    padding: ${props => props.minor ? '4px' : '6px'};
+    padding: 6px;
 
     font-size: ${props => props.minor ? '0.8em' : '1em'}
 
-    border-radius: 2px;
+    border-radius: 4px;
 
     box-shadow: ${props => props.active ? `3px 3px 0 ${colors.highlightText}` : 'none'};
 

@@ -21,6 +21,8 @@ const ProofIndex = styled.div`
     align-items: center;
     flex-wrap: wrap;
 
+    overflow-y: scroll;
+
 `
 
 const InfoBox = styled.div`
@@ -49,7 +51,7 @@ const TitleBox = styled.div`
     display: flex;
     align-items: center;
 
-    padding: 2vh 0 1vh ${props => props.size}vw;
+    padding: 1vh 0 1vh ${props => props.size}vw;
 
     font-weight: 700;
     font-size: ${props => props.size}em;
@@ -57,7 +59,7 @@ const TitleBox = styled.div`
 
 const SubTitle = styled.div`
 
-    margin: 2vh 0 3vh 40px;
+    margin: 2vh 0 0 40px;
 
     color: ${colors.mediumText};
     
@@ -67,6 +69,8 @@ const SubTitle = styled.div`
 const SubBox = styled.div`
 
     align-self: flex-end;
+
+    height: ${props => props.height};
     width: 540px;
 
     margin: 2vh 0 0 0;
@@ -75,8 +79,6 @@ const SubBox = styled.div`
 
     display: flex;
     flex-direction: column;
-
-    overflow-y: scroll;
 
 `
 
@@ -97,22 +99,75 @@ const Link = styled.a`
     cursor: pointer;
 `
 
+const Stat = styled.div`
+
+    margin: 4px 0 8px ${props=>props.margin}px;
+
+
+
+`
+
+const StatsIndex = styled.div`
+
+    width: 100%;
+
+    padding: 2%;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: scroll;
+
+`
+
 
 
 
 const Home = props => {
+    
     return (
         <Page>
             {props.loggedIn ?
             <InfoBox>
                 <TitleBox size={3}>Home</TitleBox>
                 <SubTitle size={1.6}>{`Welcome back ${props.userInfo.username}!`}</SubTitle>
-                <SubBox>
+
+
+                <SubBox height="34vh">
                     <TitleBox size={2}>Your Proofs</TitleBox>
                     <ProofIndex>
                         {props.userInfo.proofs.map( p => <ProofCard key={p.proofId} {...p} myProofId={p.proofId}/>)}
                     </ProofIndex>
                 </SubBox>
+
+
+                <SubBox height="24vh">
+                    <TitleBox size={2}>Exercise Statistics</TitleBox>
+                    <StatsIndex>
+
+                        <Stat margin="10">Your proofs: {props.userInfo.proofs.filter(p =>props.userInfo.success_ids.includes(p.proofId)).length} / {props.userInfo.proofs.length}</Stat>
+
+
+                        <Stat margin="10">Propositional Logic:</Stat>
+
+                        {props.propositionalGroups.map( g => <Stat margin="30">{g.name}: {g.proofs.filter(p=>props.userInfo.success_ids.includes(p.proofId)).length} / {g.proofs.length}</Stat>)}
+
+                        <Stat margin="10">Predicate Logic:</Stat>
+
+                        {props.predicateGroups.map( g => <Stat margin="30">{g.name}: {g.proofs.filter(p=>props.userInfo.success_ids.includes(p.proofId)).length} / {g.proofs.length}</Stat>)}
+
+                        <Stat margin="10">Relational Logic:</Stat>
+
+                        {props.relationalGroups.map( g => <Stat margin="30">{g.name}: {g.proofs.filter(p=>props.userInfo.success_ids.includes(p.proofId)).length} / {g.proofs.length}</Stat>)}
+                        
+
+
+
+
+
+                    </StatsIndex>
+                </SubBox>
+                
             
             </InfoBox>
             : 
@@ -141,7 +196,11 @@ const Home = props => {
 const msp = () => {
     return state => {
        
-        return {...state, loggedIn: state.userInfo}
+        return {...state,
+            loggedIn: state.userInfo,
+            propositionalGroups: state.exerciseData.filter( e => e.logic === "Propositional"), 
+            predicateGroups: state.exerciseData.filter( e => e.logic === "Predicate"),
+            relationalGroups: state.exerciseData.filter( e => e.logic === "Relational")}
     }
 }
 

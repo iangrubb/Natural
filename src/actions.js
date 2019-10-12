@@ -1,7 +1,7 @@
 
 import loadProof from './helpers/loadProof'
 
-const URL = 'http://localhost:3000'
+const URL = 'https://powerful-hamlet-69686.herokuapp.com'
 
 
 const fetchExercises = dispatch => {
@@ -74,7 +74,6 @@ const attemptAutoLogin = dispatch => {
         fetch(`${URL}/autologin`, {headers: {Authorization: token}, 'accept': 'application/json'})
         .then(resp => resp.json())
         .then(data => {
-            console.log("fetched this:", data)
             if (!data.errors) {
                 const processedProofs = data.data.attributes.proof_data.map( p => {
                     return {
