@@ -2,7 +2,8 @@
 
 A virtual tutor for natural deduction proofs.
 
-Live demo [here](https://naturalprover.netlify.com/)!
+
+[Try](https://naturalprover.netlify.com/) it for yourself!
 
 ## Motivation
 
