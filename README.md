@@ -3,7 +3,7 @@
 A virtual tutor for natural deduction proofs.
 
 
-[Try](https://naturalprover.netlify.com/) it for yourself! (Note: since the backend needs to turn on when it hasn't recently been used, the exercise list may at first take several seconds to load.)
+[Try](https://naturalprover.netlify.com/) it for yourself!
 
 ## Motivation
 
