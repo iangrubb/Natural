@@ -2,6 +2,9 @@
 
 A virtual tutor for natural deduction proofs.
 
+
+[Try](https://naturalprover.netlify.com/) it for yourself!
+
 ## Motivation
 
 In introductory courses on formal logic, the hardest challenge that many students face is the construction of natural deduction proofs. The challenge is twofold: the syntax involved in natural deduction proof rules can be intimidating and the strategy required for combining these rules in the right way can be initially unintuitive. Unfortunately, many students get hung up on the syntax, and so don't get a chance to develop an understanding of the strategy involved in proof construction.
