@@ -41,9 +41,10 @@ export const Page = styled.div`
 
     overflow: scroll;
 
-    display: flex;
+    
+    /* display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; */
 `
 
 const boxstyle = `  

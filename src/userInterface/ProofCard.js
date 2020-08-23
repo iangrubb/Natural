@@ -16,6 +16,8 @@ const Container = styled.div`
 
     width: 180px;
 
+    height: fit-content;
+
     margin: 2%;
     padding: 10px;
 

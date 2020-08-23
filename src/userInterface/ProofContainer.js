@@ -19,7 +19,10 @@ const Category = styled.div`
     padding: 0 0 50px 0;
     margin: 50px 0 0 0;
 
-    border-radius:2px;
+    border-radius: 2px;
+
+    margin: 50px auto 0 auto;
+
 `
 
 const CategoryDetails = styled.div`
@@ -47,6 +50,8 @@ const ProofList = styled.div`
 
     margin: 20px 10px 0 10px;
     width: calc(100% - 240px);
+    
+    
 
     display: flex;
     flex-wrap: wrap;

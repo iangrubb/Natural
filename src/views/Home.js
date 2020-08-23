@@ -29,7 +29,7 @@ const InfoBox = styled.div`
 
     width: 600px;
     height: 80vh;
-    margin: 5vh 0 5vh 0;
+    margin: 5vh auto 5vh auto;
     border-left: solid ${colors.darkSurface} 6px;
 
     display: flex;

@@ -23,7 +23,7 @@ const TypeChoice = styled.div`
     width: 250px;
 
     padding: 20px 50px;
-    margin: 50px;
+    margin: 50px auto;
 
     border-radius: 2px;
     background: ${colors.lightSurface};
